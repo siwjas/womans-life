@@ -1,0 +1,25 @@
+<%= turbo_frame_tag "edit_bmi_calculator" do %>
+  <section class="bg-gray-50 dark:bg-gray-900">
+    <div class="flex flex-col items-center justify-center px-4 py-6 mx-auto">
+      <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-2 space-y-4 sm:p-4">
+          <h1 class="py-4 text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-2xl dark:text-white">
+            Editar Cálculo de IMC
+          </h1>
+          <%= form_with model: [current_user, @calculator], url: bmi_calculator_path(@calculator), method: :patch, local: true, data: { turbo_frame: "edit_bmi_calculator" } do |form| %>
+            <div class="mb-4">
+              <%= form.label :weight, "Peso (kg)", class: "block text-gray-800 dark:text-gray-100" %>
+              <%= form.number_field :weight, step: 0.1, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm" %>
+            </div>
+            <div class="mb-4">
+              <%= form.label :height, "Altura (cm)", class: "block text-gray-800 dark:text-gray-100" %>
+              <%= form.number_field :height, step: 1, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm" %>
+            </div>
+            <%= form.submit "Atualizar", class: "w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 
+                focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+<% end %> 
