@@ -62,3 +62,9 @@ group :development do
 end
 
 gem "devise", "~> 4.9"
+
+gem "dockerfile-rails", ">= 1.7", :group => :development
+
+gem "litestream", "~> 0.12.0"
+
+gem "aws-sdk-s3", "~> 1.182", :require => false
