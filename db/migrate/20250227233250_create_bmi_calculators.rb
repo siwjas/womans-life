@@ -12,6 +12,6 @@ class CreateBmiCalculators < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :bmi_calculators, [ :user_id, :created_at ]
+    add_index :bmi_calculators, [:user_id, :created_at]
   end
 end

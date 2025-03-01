@@ -24,15 +24,15 @@
 # Any libraries that use a connection pool or another resource pool should
 # be configured to provide at least as many connections as the number of
 # threads. This includes Active Record's `pool` parameter in `database.yml`.
-workers Integer(ENV["WEB_CONCURRENCY"] || 2)
-threads_count = Integer(ENV["RAILS_MAX_THREADS"] || 5)
+workers Integer(ENV['WEB_CONCURRENCY'] || 2)
+threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
 threads threads_count, threads_count
 
 preload_app!
 
 rackup      DefaultRackup
-port        ENV["PORT"]     || 3000
-environment ENV["RAILS_ENV"] || "development"
+port        ENV['PORT']     || 3000
+environment ENV['RAILS_ENV'] || 'development'
 
 on_worker_boot do
   ActiveRecord::Base.establish_connection
