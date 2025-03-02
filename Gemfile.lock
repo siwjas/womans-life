@@ -447,7 +447,7 @@ DEPENDENCIES
   kamal
   litestream (~> 0.12.0)
   propshaft
-  puma (>= 5.0)
+  puma (~> 6.0)
   rails (~> 8.0.1)
   rubocop-rails-omakase
   solid_cable
