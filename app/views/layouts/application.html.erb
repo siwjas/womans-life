@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR" charset="utf-8">
   <head>
     <title><%= content_for(:title) || "Vida De Mulher" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -27,7 +27,7 @@
     <%= render 'shared/notices' %>
     <%= render "shared/nav_bar" %>
 
-    <main class="container flex-col space-y-12 mx-auto px-4 py-24">
+    <main class="container h-screen flex flex-col justify-start space-y-12 mx-auto px-4">
       <%= yield %>
     </main>
   </body>

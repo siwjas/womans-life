@@ -4,11 +4,11 @@ import "controllers"
 
 // Navbar toggle
 document.addEventListener('DOMContentLoaded', function() {
-  const navbarToggle = document.querySelector('[data-collapse-toggle="navbar-default"]');
-  const navbarMenu = document.getElementById('navbar-default');
+  const navbarToggle = document.querySelector('[data-collapse-toggle="menu-mobile"]');
+  const navbarMenu = document.getElementById('menu-mobile');
 
   if (navbarToggle && navbarMenu) {
-    navbarToggle.addEventListener('click', function() {
+    navbarToggle.addEventListener('click', () => {
       navbarMenu.classList.toggle('hidden');
     });
   }

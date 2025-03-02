@@ -1,4 +1,4 @@
-<section class="bg-white dark:bg-gray-900 shadow-lg dark:shadow-none rounded-lg">
+<section class="bg-white dark:bg-gray-900 shadow-lg dark:shadow-none rounded-lg mt-8 md:mt-16">
   <div class="py-20 px-4 mx-auto max-w-screen-xl text-center">
     <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
       Bem-vinda ao Vida de Mulher
@@ -8,28 +8,33 @@
     </p>
     <div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
       <%= link_to "Comece Agora", new_user_registration_path, 
-          class: "inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900" %>
+          class: "inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-pink-700 
+          hover:bg-pink-800 focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-900" %>
       
       <%= link_to "Saiba Mais", "#features", 
-          class: "inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800" %>
+          class: "inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-pink-900 rounded-lg border 
+          border-pink-400 hover:bg-pink-300 hover:pink-800 focus:ring-4 focus:ring-pink-100 dark:text-white 
+          dark:border-pink-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800" %>
     </div>
   </div>
 </section>
 
-<section id="features" class="bg-gray-50 dark:bg-gray-800 shadow-lg rounded-lg">
+<section id="features" class="bg-stone-50 dark:bg-gray-800 shadow-lg rounded-lg">
   <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
     <div class="max-w-screen-md mb-8 lg:mb-16">
       <h2 class="mb-4 text-4xl font-extrabold text-gray-900 dark:text-white">
-        Nossos Recursos
+        Como podemos ajudar na sua jornada
       </h2>
       <p class="text-gray-500 sm:text-xl dark:text-gray-400">
-        Conheça as principais funcionalidades que vão te ajudar a cuidar da sua saúde
+        Ttire dúvidas, acompanhe seu ciclo menstrual e gravidez, e acesse conteúdos informativos
       </p>
     </div>
-    <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
-      <div>
-        <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-blue-100 lg:h-12 lg:w-12 dark:bg-blue-900">
-          <svg class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+
+    <div class="space-y-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 md:space-y-0">
+
+      <div class="bg-white dark:bg-gray-900 shadow-md rounded-md p-4">
+        <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-pink-100 lg:h-12 lg:w-12 dark:bg-pink-900">
+          <svg class="w-5 h-5 text-pink-600 lg:w-6 lg:h-6 dark:text-pink-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
           </svg>
         </div>
@@ -38,9 +43,9 @@
           Acompanhe seu ciclo menstrual e identifique seus dias férteis
         </p>
       </div>
-      <div>
-        <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-blue-100 lg:h-12 lg:w-12 dark:bg-blue-900">
-          <svg class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <div class="bg-white dark:bg-gray-900 shadow-md rounded-md p-4">
+        <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-pink-100 lg:h-12 lg:w-12 dark:bg-pink-900">
+          <svg class="w-5 h-5 text-pink-600 lg:w-6 lg:h-6 dark:text-pink-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
           </svg>
         </div>
@@ -49,9 +54,9 @@
           Saiba em qual semana está e acompanhe o desenvolvimento do bebê
         </p>
       </div>
-      <div>
-        <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-blue-100 lg:h-12 lg:w-12 dark:bg-blue-900">
-          <svg class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <div class="bg-white dark:bg-gray-900 shadow-md rounded-md p-4">
+        <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-pink-100 lg:h-12 lg:w-12 dark:bg-pink-900">
+          <svg class="w-5 h-5 text-pink-600 lg:w-6 lg:h-6 dark:text-pink-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
             <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path>
           </svg>

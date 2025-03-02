@@ -1,4 +1,5 @@
 class BmiCalculatorsController < ApplicationController
+  before_action :authenticate_user!
   def index
     @latest_bmi_calculation = current_user.bmi_calculators.order(created_at: :desc).first
   end

@@ -1,52 +1,166 @@
-<nav class="bg-pink-200 border-gray-200 dark:bg-gray-900 fixed inset-x-0 top-0 z-10 shadow-md">
-  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-    <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-      <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Vida de Mulher</span>
-    </a>
-    <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-      <% if user_signed_in? %>
-        <button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-          <span class="sr-only">Abrir menu do usuário</span>
-          <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-blue-600 text-white">
-            <%= current_user.first_name[0].upcase %>
-          </span>
-        </button>
-        <!-- Dropdown menu -->
-        <div class="z-50 hidden my-4 text-base list-none bg-pink-100 divide-y divide-gray-300 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-          <div class="px-4 py-3">
-            <span class="block text-sm text-gray-900 dark:text-white"><%= current_user.first_name %></span>
-            <span class="block text-sm  text-gray-500 truncate dark:text-gray-400"><%= current_user.email %></span>
-          </div>
-          <ul class="py-2" aria-labelledby="user-menu-button">
-            <li>
-              <%= link_to "Perfil", profile_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" %>
-            </li>
-            <li>
-              <%= link_to "Sair", destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" %>
-            </li>
-          </ul>
-        </div>
-      <% else %>
-        <%= link_to "Login", new_user_session_path, class: "text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800" %>
-        <%= link_to "Cadastro", new_user_registration_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ml-2" %>
-      <% end %>
-      <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
-        <span class="sr-only">Abrir menu principal</span>
-        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-        </svg>
-      </button>
-    </div>
+<nav data-controller="mobile-menu" class="bg-pink-100 dark:bg-gray-800 rounded-e-lg md:rounded-none">
+  <div class="mx-auto max-w-7xl px-2 md:px-6 lg:px-8">
+    <div class="relative flex h-20 items-center justify-between">
+      <div class="absolute inset-y-0 left-0 flex items-center md:hidden">
+        <!-- Mobile menu button-->
+        <button data-action="click->mobile-menu#toggle" type="button" class="relative bg-pink-300 inline-flex items-center justify-center rounded-md p-3 text-gray-700 hover:bg-pink-600 
+              hover:text-white focus:ring-2 focus:ring-pink-600 focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
+          <span class="absolute -inset-0.5"></span>
+          <span class="sr-only">Open main menu</span>
+          <!--
+            Icon when menu is closed.
 
-    <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-0" id="navbar-user">
-      <ul class="flex flex-col space-y-1 md:space-y-0 font-medium p-4 md:p-0 mt-4 border border-gray-200 rounded-lg bg-pink-50 md:bg-pink-200 md:space-x-8 
-          rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-        <% nav_items.each do |link| %>
-          <li>
-            <%= link_to link[:page], link[:href], class: nav_class(link[:href]), aria: { current: aria(link[:href])} %>
-          </li>
+            Menu open: "hidden", Menu closed: "block"
+          -->
+          <svg class="block size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <!--
+            Icon when menu is open.
+
+            Menu open: "block", Menu closed: "hidden"
+          -->
+          <svg class="hidden size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
+        <div class="flex shrink-0 items-center">
+          <%= link_to root_path, class: "flex items-center space-x-3 hover:text-pink-900 transition-all" do %>
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Vida de Mulher</span>
+          <% end %>
+        </div>
+        <div class="hidden md:ml-6 md:block">
+          <div class="flex space-x-4 text-center">
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+            <% nav_items.each do |link| %>              
+              <%= link_to link[:page], link[:href], class: [ "rounded-md px-3 py-2 font-medium text-lg drop-shadow-md text-gray-900 dark:text-white
+                  transition-all duration-300",
+                  { "text-white bg-pink-700": current_page?(link[:href]) },
+                  { "hover:bg-pink-400 dark:hover:bg-gray-700/50 hover:text-white": !current_page?(link[:href]) } ], 
+                  aria: { current: aria(link[:href])} %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <% if user_signed_in? %>
+        <!-- Profile dropdown -->
+        <div data-controller="dropdown-menu" class="relative ml-3">
+          <div>
+            <button data-dropdown-menu-target="button"
+              data-action="click->dropdown-menu#toggle click@window->dropdown-menu#hide keydown.esc->dropdown-menus#close"
+              type="button" class="relative flex ring-pink-700 ring rounded-full bg-pink-500 text-sm hover:ring-offset-2 hover:ring-pink-700 
+              focus:ring-2 focus:ring-pink-700 focus:ring-offset-2 focus:ring-offset-pink-700 focus:outline-hidden" 
+              id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+
+              <span class="absolute -inset-1.5"></span>
+              <span class="sr-only">Open user menu</span>
+              <span class="size-12 inline-flex items-center font-semibold text-2xl justify-center rounded-full text-gray-100 box-shadow-sm">
+                <%= current_user.first_name[0].upcase %>
+              </span>
+            </button>
+          </div>
+
+          <!--
+            Dropdown menu, show/hide based on menu state.
+
+            Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95"
+          -->
+          <div data-dropdown-menu-target="profileMenu" 
+               class="absolute right-0 z-10 mt-2 overflow-hidden w-content origin-top-right rounded-md bg-pink-50 py-0 ring-1 shadow-lg 
+             ring-pink-500 focus:outline-hidden transition-opacity duration-300" 
+             role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+            <div id="user-menu-item-0" class="px-4 py-2 bg-pink-100 space-y-1 border-b-[1px] border-gray-200" role="menuitem" tabindex="-1">
+              <span class="block font-medium text-sm text-pink-900 dark:text-gray100"><%= current_user.first_name.capitalize %></span>
+
+              <div class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-100 truncate ">
+                <svg class="w-4 h-4" 
+                  aria-hidden="true" 
+                  width="24" 
+                  height="24" 
+                  fill="none" 
+                  viewBox="0 0 24 24">
+                  <path stroke="currentColor" 
+                    stroke-linecap="round" 
+                    stroke-width="2"
+                    d="m3.5 5.5 7.893 6.036a1 1 0 0 0 1.214 0L20.5 5.5M4 19h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
+                </svg>
+
+                <span><%= current_user.email %></span>
+              </div>
+            </div>
+
+            <div id="user-menu-item-1" class="w-full px-4 py-2 inline-flex items-center gap-2 text-sm text-gray-700 hover:bg-pink-200
+                 truncate dark:text-gray-400 transition-all duration-300" role="menuitem" tabindex="-1">
+              <svg class="w-4 h-4" 
+                   aria-hidden="true" 
+                   width="24" 
+                   height="24" 
+                   fill="none" 
+                   viewBox="0 0 24 24">
+                <path stroke="currentColor" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+              </svg>
+
+              <span><%= link_to "Seu perfil", profile_path %></span>                  
+            </div>
+
+            <div id="user-menu-item-2" class="w-full px-4 py-2 mb-0 inline-flex items-center gap-2 text-sm text-gray-700 hover:bg-pink-200
+                 hover:text-pink-800 truncate dark:text-gray-400 transition-all duration-300" role="menuitem" tabindex="-1">
+              <svg class="w-4 h-4" 
+                aria-hidden="true" 
+                width="24" 
+                height="24" 
+                fill="none" 
+                viewBox="0 0 24 24">
+                <path stroke="currentColor" 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" d="M20 12H8m12 0-4 4m4-4-4-4M9 4H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h2"/>
+              </svg>
+
+              <span><%= link_to "Sair", destroy_user_session_path, data: { turbo_method: :delete } %></span>                  
+            </div>
+          </div>
+        </div>
+        <% else %>
+         <div class="hidden md:flex gap-4 items-center">
+            <%= link_to new_user_session_path, class: "inline-flex gap-2 items-center font-medium  rounded-lg text-sm px-4 py-2 text-pink-500 hover:bg-pink-600 hover:text-white 
+                ring-1 ring-inset-1 ring-pink-500 focus:ring-pink-500 focus:text-white focus:bg-pink-500 focus:outline-none dark:focus:ring-pink-800 ml-2" do %>
+              <svg class="w-4 h-4" aria-hidden="true" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/>
+              </svg>
+              Login
+            <% end %>
+            <%= link_to "Cadastro", new_user_registration_path, class: "text-white bg-pink-700 hover:bg-pink-800  focus:ring-inset-2 font-medium rounded-lg text-sm 
+                px-4 py-2 md:px-5 dark:bg-pink-600 dark:hover:bg-pink-700 focus:outline-none dark:focus:ring-pink-800" %>
+          </div>
         <% end %>
-      </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu, show/hide based on menu state. -->
+  <div data-mobile-menu-target="mobileMenu" class="hidden origin-top transition-opacity duration-300" id="mobile-menu">
+    <div class="space-y-1 px-2 pt-2 pb-3">
+      <!-- Current: "text-white bg-pink-700", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+      <% nav_items.each do |link| %>              
+        <%= link_to link[:page], link[:href], class: [ "block rounded-md px-3 py-2 font-medium text-lg drop-shadow-md text-gray-900 dark:text-white
+            transition-all duration-300",
+            { "text-white bg-pink-700": current_page?(link[:href]) },
+            { "hover:bg-pink-400 dark:hover:bg-gray-700/50 hover:text-white": !current_page?(link[:href]) } ], 
+            aria: { current: aria(link[:href])} %>
+      <% end %>
     </div>
   </div>
 </nav>

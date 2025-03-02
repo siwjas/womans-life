@@ -2,10 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-    // Fecha a mensagem automaticamente após 3 segundos
+    // Fecha a mensagem automaticamente após 5 segundos
     setTimeout(() => {
       this.close();
-    }, 3000);
+    }, 5000);
   }
 
   close() {

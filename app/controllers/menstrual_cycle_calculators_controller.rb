@@ -1,4 +1,5 @@
 class MenstrualCycleCalculatorsController < ApplicationController
+  before_action :authenticate_user!
   def index
     @latest_menstrual_calculation = current_user.menstrual_cycle_calculators.order(created_at: :desc).first
   end

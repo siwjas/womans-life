@@ -1,4 +1,5 @@
 class PregnancyCalculatorsController < ApplicationController
+  before_action :authenticate_user!
   def index
     @latest_pregnancy_calculation = current_user.pregnancy_calculators.order(created_at: :desc).first
   end
