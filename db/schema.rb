@@ -11,10 +11,13 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_02_27_233250) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
   create_table "bmi_calculators", force: :cascade do |t|
     t.integer "user_id", null: false
     t.decimal "weight", precision: 5, scale: 2, null: false
-    t.decimal "height", precision: 3, scale: 2, null: false
+    t.decimal "height", precision: 5, scale: 2, null: false
     t.decimal "bmi", precision: 4, scale: 2
     t.boolean "is_pregnant", default: false
     t.decimal "pre_pregnancy_weight", precision: 5, scale: 2

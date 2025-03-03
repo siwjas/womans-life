@@ -4,6 +4,8 @@ class BmiCalculator < ApplicationRecord
   # Validations
   validates :weight, presence: true, numericality: { greater_than: 0 }
   validates :height, presence: true, numericality: { greater_than: 0 }
+  validates :pre_pregnancy_weight, numericality: { greater_than: 0 }, allow_nil: true
+  validates :weight_goal, numericality: { greater_than: 0 }, allow_nil: true
 
   # Callbacks
   before_save :calculate_bmi
