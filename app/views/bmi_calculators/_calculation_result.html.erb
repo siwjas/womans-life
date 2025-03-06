@@ -1,5 +1,12 @@
 <%= turbo_frame_tag dom_id(calculator) do %>
-  <div class="mt-4 p-4 bg-white rounded-lg shadow-md border-l-4 <%= calculator.bmi_border_color(calculator.bmi) %>" >
+  <%= tag.div class: [ "mt-4 p-4 bg-white rounded-lg shadow-md border-l-4",
+      { "border-yellow-400":  calculator.bmi_category == "Abaixo do peso ideal",
+        "border-green-400":   calculator.bmi_category == "Peso ideal",
+        "border-orange-400":  calculator.bmi_category == "Sobrepeso",
+        "border-red-400":     calculator.bmi_category == "Obesidade Grau I",
+        "border-red-600":     calculator.bmi_category == "Obesidade Grau II",
+        "border-red-800":     calculator.bmi_category == "Obesidade Grau III"  } ] do %>
+          
     <div class="flex items-center justify-between">
       <div>
         <p class="text-sm text-gray-500">Cálculo realizado em <%= calculator.created_at.strftime("%d/%m/%Y") %></p>
@@ -18,5 +25,5 @@
       <%= link_to "Editar", edit_bmi_calculator_path(calculator), class: "text-blue-600 hover:text-blue-800", data: { turbo_frame: "edit_bmi_calculator" } %>
       <%= button_to "Excluir", bmi_calculator_path(calculator), method: :delete, class: "text-red-600 hover:text-red-800", data: { confirm: "Tem certeza que deseja excluir este cálculo?" } %>
     </div>
-  </div>
+  <% end %>
 <% end %>

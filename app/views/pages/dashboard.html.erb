@@ -431,7 +431,7 @@
               <canvas id="weightChart"></canvas>
               <% if @weight_chart_data.blank? || @weight_chart_data.size <= 1 %>
                 <div class="text-center py-4 text-gray-500">
-                  Dados insuficientes para exibir o gráfico de peso.
+                  Dados insuficientes para exibir o gráfico de peso/IMC.
                 </div>
               <% end %>
             </div>
@@ -460,7 +460,7 @@
           
           <!-- Tabela de histórico -->
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-3">Últimos registros</h3>
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-3">Últimas pesagens</h3>
             <div class="overflow-y-auto max-h-64">
               <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
@@ -506,7 +506,8 @@
               </table>
             </div>
             <div class="mt-4 text-right">
-              <%= link_to "Ver todos os registros", bmi_calculators_path, class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" %>
+              <%= link_to "Adicionar nova pesagem", bmi_calculators_path, 
+                  class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" %>
             </div>
           </div>
         </div>
@@ -532,8 +533,9 @@
                   <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
                     <% case @latest_bmi.bmi_category %>
                     <% when "Abaixo do peso" %>
-                      Seu IMC indica que você está abaixo do peso ideal. Considere consultar um nutricionista para desenvolver um plano alimentar adequado.
-                    <% when "Peso normal" %>
+                      Seu IMC indica que você está abaixo do peso ideal. 
+                      Considere consultar um nutricionista para desenvolver um plano alimentar adequado.
+                    <% when "Peso ideal" %>
                       Parabéns! Seu IMC está na faixa considerada saudável. Continue mantendo hábitos saudáveis.
                     <% when "Sobrepeso" %>
                       Seu IMC indica sobrepeso. Considere aumentar a atividade física e revisar sua alimentação.
