@@ -3,10 +3,15 @@ Rails.application.routes.draw do
   get "pages/home"
   root "pages#home"
 
+  # Rotas para as páginas estáticas
+  get "blog", to: "pages#blog", as: :blog
+  get "dashboard", to: "pages#dashboard", as: :dashboard
+  get "sobre", to: "pages#about", as: :about
+
   # Rotas para as calculadoras
-  resources :pregnancy_calculators, only:       [ :index, :create, :edit, :update, :destroy ]
-  resources :menstrual_cycle_calculators, only: [ :index, :create, :edit, :update, :destroy ]
-  resources :bmi_calculators, only:             [ :index, :create, :edit, :update, :destroy ]
+  resources :pregnancy_calculators
+  resources :menstrual_cycle_calculators
+  resources :bmi_calculators
 
   # Rota para a página de perfil
   resource :profile, only: [ :show ]

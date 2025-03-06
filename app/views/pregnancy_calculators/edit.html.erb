@@ -1,4 +1,4 @@
-<%= turbo_frame_tag "edit_pregnancy_calculator" do %>
+<%= turbo_frame_tag dom_id(@calculator) do %>
   <section class="bg-gray-50 dark:bg-gray-900">
     <div class="flex flex-col items-center justify-center px-4 py-6 mx-auto">
       <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -6,7 +6,7 @@
           <h1 class="py-4 text-xl font-bold leading-tight tracking-tight text-center text-gray-900 md:text-2xl dark:text-white">
             Editar Cálculo de Gravidez
           </h1>
-          <%= form_with model: [current_user, @calculator], url: pregnancy_calculator_path(@calculator), method: :patch, local: true, data: { turbo_frame: "edit_pregnancy_calculator" } do |form| %>
+          <%= form_with model: [current_user, @calculator], url: pregnancy_calculator_path(@calculator), method: :patch, data: { turbo_frame: dom_id(@calculator) } do |form| %>
             <div class="mb-4 space-y-2">
               <%= form.label :last_menstrual_period_date, "Data da Última Menstruação", class: "block text-gray-800 dark:text-gray-100" %>
               <%= form.date_field :last_menstrual_period_date, 

@@ -1,0 +1,20 @@
+<div class="lg:hidden" id="mobile-menu" data-mobile-menu-target="menu">
+  <div class="space-y-1 px-2 pb-3 pt-2">
+    <% nav_items.each do |link| %>
+      <% if link[:dropdown] %>
+        <div class="space-y-1">
+          <div class="px-3 py-2 font-medium text-base text-gray-900 dark:text-white">
+            <%= link[:page] %>
+          </div>
+          <div class="pl-4 space-y-1">
+            <% link[:dropdown].each do |drop_link| %>
+              <%= link_to drop_link[:page], drop_link[:href], class: "block rounded-md px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-pink-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white" %>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <%= link_to link[:page], link[:href], class: "block rounded-md px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-pink-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white" %>
+      <% end %>
+    <% end %>
+  </div>
+</div> 

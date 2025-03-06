@@ -1,0 +1,444 @@
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Seu Dashboard Personalizado</h1>
+      <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">
+        Bem-vinda, <%= current_user.first_name.capitalize %>! Aqui está um resumo da sua saúde.
+      </p>
+    </div>
+
+    <!-- Próximos Eventos -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Próximos Eventos</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% if @upcoming_events.present? %>
+          <% @upcoming_events.each do |event| %>
+            <% if event[:type] == 'weight' %>
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 
+                          <%= event[:status] == 'ideal' ? 'border-green-500' : 
+                             event[:status] == 'lose' ? 'border-rose-500' : 
+                             'border-green-500' %>">
+                <div class="p-5">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="text-lg font-semibold text-gray-800 dark:text-white"><%= event[:name] %></h3>
+                      <p class="text-sm text-gray-600 dark:text-gray-300">
+                        Peso atual: <%= event[:current] %> kg
+                      </p>
+                      <p class="text-sm text-gray-600 dark:text-gray-300">
+                        Peso ideal: <%= event[:target] %> kg
+                      </p>
+                    </div>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                <%= event[:status] == 'ideal' ? 'bg-green-100 text-green-800' :
+                                   event[:status] == 'lose' ? 'bg-rose-100 text-rose-800' :
+                                   'bg-blue-100 text-blue-800' %>">
+                      <%= event[:message] %>
+                    </span>
+                  </div>
+                  
+                  <% if event[:status] == 'ideal' %>
+                    <!-- Mensagem de peso ideal com ícone de check -->
+                    <div class="mt-3 flex items-center justify-center py-2 text-green-600">
+                      <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span class="text-sm font-medium">Você está no seu peso ideal!</span>
+                    </div>
+                  <% else %>
+                    <!-- Barra de progresso para quem precisa ganhar ou perder peso -->
+                    <div class="mt-3">
+                      <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <% 
+                          # Calcular a porcentagem do progresso
+                          if event[:status] == 'lose'
+                            # Se precisa perder peso, quanto mais próximo do ideal, maior o progresso
+                            max_weight = event[:current] * 1.3  # 30% acima do peso atual como referência máxima
+                            progress = ((max_weight - event[:current]) / (max_weight - event[:target]) * 100).round
+                            progress = [progress, 100].min
+                            progress_color = "bg-rose-500"
+                          else
+                            # Se precisa ganhar peso, quanto mais próximo do ideal, maior o progresso
+                            min_weight = event[:current] * 0.7  # 30% abaixo do peso atual como referência mínima
+                            progress = ((event[:current] - min_weight) / (event[:target] - min_weight) * 100).round
+                            progress = [progress, 100].min
+                            progress_color = "bg-green-500"
+                          end
+                        %>
+                        <div class="<%= progress_color %> h-2.5 rounded-full" style="width: <%= progress %>%"></div>
+                      </div>
+                    </div>
+                  <% end %>
+                  
+                  <div class="mt-2 text-right">
+                    <%= link_to "Ver detalhes", bmi_calculators_path, class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" %>
+                  </div>
+                </div>
+              </div>
+            <% else %>
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 
+                          <%= event[:type] == 'menstrual' ? 'border-pink-500' : 
+                             event[:type] == 'fertility' ? 'border-purple-500' : 'border-blue-500' %>">
+                <div class="p-5">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="text-lg font-semibold text-gray-800 dark:text-white"><%= event[:name] %></h3>
+                      <p class="text-sm text-gray-600 dark:text-gray-300">
+                        <%= event[:date].strftime("%d/%m/%Y") %>
+                        <% if event[:end_date].present? %>
+                          até <%= event[:end_date].strftime("%d/%m/%Y") %>
+                        <% end %>
+                      </p>
+                    </div>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                <%= event[:status] == 'current' ? 'bg-purple-100 text-purple-800' :
+                                   event[:days_away] < 0 ? 'bg-gray-100 text-gray-800' :
+                                   event[:days_away] == 0 ? 'bg-red-100 text-red-800' :
+                                   event[:days_away] <= 3 ? 'bg-red-100 text-red-800' :
+                                   event[:days_away] <= 7 ? 'bg-yellow-100 text-yellow-800' :
+                                   'bg-green-100 text-green-800' %>">
+                      <% if event[:status] == 'current' %>
+                        Acontecendo agora
+                      <% elsif event[:days_away] < 0 %>
+                        Passou
+                      <% elsif event[:days_away] == 0 %>
+                        Hoje
+                      <% else %>
+                        Em <%= event[:days_away] %> dias
+                      <% end %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        <% else %>
+          <div class="col-span-full bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-600 dark:text-gray-300">
+              Nenhum evento próximo. Use nossas calculadoras para acompanhar seu ciclo e saúde.
+            </p>
+            <div class="mt-4">
+              <%= link_to "Calculadoras", "#", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <!-- Resumo das Calculadoras -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Seus Cálculos Recentes</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Calculadora de Gravidez -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <div class="bg-blue-50 dark:bg-blue-900/20 px-4 py-3 border-b border-blue-100 dark:border-blue-800">
+            <h3 class="text-lg font-medium text-blue-800 dark:text-blue-300">Gravidez</h3>
+          </div>
+          <div class="p-4">
+            <% if @latest_pregnancy %>
+              <div class="space-y-3">
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <span class="font-medium">Idade Gestacional:</span> 
+                  <%= @latest_pregnancy.weeks %> semanas e <%= @latest_pregnancy.days %> dias
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <span class="font-medium">Trimestre:</span> <%= @latest_pregnancy.current_trimester %>º
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <span class="font-medium">Data Prevista do Parto:</span> 
+                  <%= @latest_pregnancy.due_date.strftime("%d/%m/%Y") %>
+                </p>
+                <div class="pt-2">
+                  <%= link_to "Ver detalhes", pregnancy_calculators_path, class: "text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300" %>
+                </div>
+              </div>
+            <% else %>
+              <div class="text-center py-4">
+                <p class="text-gray-500 dark:text-gray-400 mb-3">Nenhum cálculo de gravidez encontrado</p>
+                <%= link_to "Calcular agora", pregnancy_calculators_path, class: "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        
+        <!-- Calculadora de Ciclo Menstrual -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <div class="bg-pink-50 dark:bg-pink-900/20 px-4 py-3 border-b border-pink-100 dark:border-pink-800">
+            <h3 class="text-lg font-medium text-pink-800 dark:text-pink-300">Ciclo Menstrual</h3>
+          </div>
+          <div class="p-4">
+            <% if @latest_menstrual %>
+              <div class="space-y-3">
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <span class="font-medium">Próximo Ciclo:</span> 
+                  <%= @latest_menstrual.next_period_date.strftime("%d/%m/%Y") %>
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <span class="font-medium">Janela Fértil:</span> 
+                  <%= @latest_menstrual.fertility_window_start.strftime("%d/%m/%Y") %> a 
+                  <%= @latest_menstrual.fertility_window_end.strftime("%d/%m/%Y") %>
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <span class="font-medium">Ovulação:</span> 
+                  <%= @latest_menstrual.ovulation_date.strftime("%d/%m/%Y") %>
+                </p>
+                <div class="pt-2">
+                  <%= link_to "Ver detalhes", menstrual_cycle_calculators_path, class: "text-sm text-pink-600 hover:text-pink-800 dark:text-pink-400 dark:hover:text-pink-300" %>
+                </div>
+              </div>
+            <% else %>
+              <div class="text-center py-4">
+                <p class="text-gray-500 dark:text-gray-400 mb-3">Nenhum cálculo de ciclo menstrual encontrado</p>
+                <%= link_to "Calcular agora", menstrual_cycle_calculators_path, class: "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        
+        <!-- Calculadora de IMC -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <div class="bg-green-50 dark:bg-green-900/20 px-4 py-3 border-b border-green-100 dark:border-green-800">
+            <h3 class="text-lg font-medium text-green-800 dark:text-green-300">IMC</h3>
+          </div>
+          <div class="p-4">
+            <% if @latest_bmi %>
+              <div class="space-y-3">
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <span class="font-medium">IMC:</span> <%= @latest_bmi.bmi %>
+                </p>
+                <p class="text-sm <%= @latest_bmi.bmi_text_color(@latest_bmi.bmi) %>">
+                  <span class="font-medium">Classificação:</span> <%= @latest_bmi.bmi_category %>
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <span class="font-medium">Peso:</span> <%= @latest_bmi.weight %> kg
+                </p>
+                <div class="pt-2">
+                  <%= link_to "Ver detalhes", bmi_calculators_path, class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" %>
+                </div>
+              </div>
+            <% else %>
+              <div class="text-center py-4">
+                <p class="text-gray-500 dark:text-gray-400 mb-3">Nenhum cálculo de IMC encontrado</p>
+                <%= link_to "Calcular agora", bmi_calculators_path, class: "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <% if @bmi_history.present? && @bmi_history.size > 1 %>
+      <!-- Gráfico de IMC -->
+      <section class="mb-10">
+        <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Histórico de IMC</h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Gráfico de IMC -->
+          <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4" data-controller="chart-switcher">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-medium text-gray-800 dark:text-white">Evolução da Saúde</h3>
+              <div class="flex space-x-2">
+                <button data-chart-switcher-target="bmiButton" 
+                        data-action="click->chart-switcher#showBmi"
+                        class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                  IMC
+                </button>
+                <button data-chart-switcher-target="weightButton" 
+                        data-action="click->chart-switcher#showWeight"
+                        class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                  Peso
+                </button>
+              </div>
+            </div>
+            
+            <!-- Gráfico de IMC -->
+            <div data-chart-switcher-target="bmiChart" class="h-64" data-controller="chart" 
+                 data-chart-labels-value="<%= @bmi_history.map { |b| b.created_at.strftime('%d/%m/%Y') }.to_json %>"
+                 data-chart-data-value="<%= @bmi_history.map(&:bmi).to_json %>"
+                 data-chart-categories-value="true">
+              <canvas id="bmiChart"></canvas>
+            </div>
+            
+            <!-- Gráfico de Peso -->
+            <div data-chart-switcher-target="weightChart" class="h-64 hidden" data-controller="weight-chart" 
+                 data-weight-chart-labels-value="<%= @weight_chart_data.present? ? @weight_chart_data.map { |d| d[:date] }.to_json : [].to_json %>"
+                 data-weight-chart-data-value="<%= @weight_chart_data.present? ? @weight_chart_data.map { |d| d[:weight] }.to_json : [].to_json %>"
+                 data-weight-chart-height-value="<%= @bmi_history.first&.height || 0 %>">
+              <canvas id="weightChart"></canvas>
+              <% if @weight_chart_data.blank? || @weight_chart_data.size <= 1 %>
+                <div class="text-center py-4 text-gray-500">
+                  Dados insuficientes para exibir o gráfico de peso.
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="mt-4 px-2">
+              <div class="grid grid-cols-4 gap-2 text-xs text-center">
+                <div class="bg-blue-100 dark:bg-blue-900/30 p-1 rounded">
+                  <span class="font-medium">Abaixo do peso</span>
+                  <br>IMC < 18.5
+                </div>
+                <div class="bg-green-100 dark:bg-green-900/30 p-1 rounded">
+                  <span class="font-medium">Peso normal</span>
+                  <br>IMC 18.5-24.9
+                </div>
+                <div class="bg-yellow-100 dark:bg-yellow-900/30 p-1 rounded">
+                  <span class="font-medium">Sobrepeso</span>
+                  <br>IMC 25-29.9
+                </div>
+                <div class="bg-red-100 dark:bg-red-900/30 p-1 rounded">
+                  <span class="font-medium">Obesidade</span>
+                  <br>IMC ≥ 30
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tabela de histórico -->
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-3">Últimos registros</h3>
+            <div class="overflow-y-auto max-h-64">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Data</th>
+                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">IMC</th>
+                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Peso</th>
+                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Categoria</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <% @bmi_history.reverse.each_with_index do |bmi, index| %>
+                    <tr>
+                      <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <%= bmi.created_at.strftime("%d/%m/%Y") %>
+                      </td>
+                      <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                        <%= bmi.bmi %>
+                        <% if index < @bmi_history.size - 1 %>
+                          <% diff = bmi.bmi - @bmi_history.reverse[index + 1].bmi %>
+                          <% if diff > 0 %>
+                            <span class="text-rose-500 text-xs ml-1">↑</span>
+                          <% elsif diff < 0 %>
+                            <span class="text-green-500 text-xs ml-1">↓</span>
+                          <% end %>
+                        <% end %>
+                      </td>
+                      <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        <%= bmi.weight %> kg
+                      </td>
+                      <td class="px-3 py-2 whitespace-nowrap text-sm">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    <%= bmi.bmi < 18.5 ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
+                                       bmi.bmi < 25 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                                       bmi.bmi < 30 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                                       'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' %>">
+                          <%= bmi.bmi_category %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+            <div class="mt-4 text-right">
+              <%= link_to "Ver todos os registros", bmi_calculators_path, class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" %>
+            </div>
+          </div>
+        </div>
+      </section>
+    <% end %>
+
+    <!-- Dicas Personalizadas -->
+    <section>
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Dicas Personalizadas</h2>
+      
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <% if @latest_bmi || @latest_menstrual || @latest_pregnancy %>
+          <div class="space-y-4">
+            <% if @latest_bmi %>
+              <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-lg font-medium text-gray-900 dark:text-white">Saúde e Peso</h3>
+                  <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                    <% case @latest_bmi.bmi_category %>
+                    <% when "Abaixo do peso" %>
+                      Seu IMC indica que você está abaixo do peso ideal. Considere consultar um nutricionista para desenvolver um plano alimentar adequado.
+                    <% when "Peso normal" %>
+                      Parabéns! Seu IMC está na faixa considerada saudável. Continue mantendo hábitos saudáveis.
+                    <% when "Sobrepeso" %>
+                      Seu IMC indica sobrepeso. Considere aumentar a atividade física e revisar sua alimentação.
+                    <% when "Obesidade Grau I" %>
+                      Seu IMC indica obesidade grau I. Recomendamos consultar um profissional de saúde para orientações.
+                    <% else %>
+                      Seu IMC indica que você deve procurar orientação médica para melhorar sua saúde.
+                    <% end %>
+                  </p>
+                </div>
+              </div>
+            <% end %>
+            
+            <% if @latest_menstrual %>
+              <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-lg font-medium text-gray-900 dark:text-white">Ciclo Menstrual</h3>
+                  <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                    <% days_to_next = (@latest_menstrual.next_period_date - Date.today).to_i %>
+                    <% if days_to_next <= 3 && days_to_next >= 0 %>
+                      Seu próximo ciclo menstrual está previsto para começar em breve. Prepare-se com antecedência.
+                    <% elsif days_to_next < 0 %>
+                      Seu ciclo menstrual estava previsto para começar há <%= days_to_next.abs %> dias. Se ainda não começou, considere atualizar seus dados.
+                    <% else %>
+                      Seu próximo ciclo menstrual está previsto para daqui a <%= days_to_next %> dias.
+                    <% end %>
+                  </p>
+                </div>
+              </div>
+            <% end %>
+            
+            <% if @latest_pregnancy %>
+              <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-lg font-medium text-gray-900 dark:text-white">Gravidez</h3>
+                  <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                    <% case @latest_pregnancy.current_trimester %>
+                    <% when 1 %>
+                      Você está no primeiro trimestre. É importante tomar ácido fólico e fazer o pré-natal regularmente.
+                    <% when 2 %>
+                      Você está no segundo trimestre. Este é geralmente o período mais confortável da gravidez. Continue com as consultas de pré-natal.
+                    <% when 3 %>
+                      Você está no terceiro trimestre. Prepare-se para a chegada do bebê e continue com as consultas de pré-natal.
+                    <% end %>
+                  </p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-4">
+            <p class="text-gray-500 dark:text-gray-400">
+              Use nossas calculadoras para receber dicas personalizadas sobre sua saúde.
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div> 

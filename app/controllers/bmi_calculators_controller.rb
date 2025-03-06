@@ -1,5 +1,7 @@
 class BmiCalculatorsController < ApplicationController
+  include ActionView::RecordIdentifier
   before_action :authenticate_user!
+
   def index
     @latest_bmi_calculation = current_user.bmi_calculators.order(created_at: :desc).first
   end
@@ -28,10 +30,6 @@ class BmiCalculatorsController < ApplicationController
 
   def edit
     @calculator = current_user.bmi_calculators.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.turbo_stream
-    end
   end
 
   def update
@@ -40,18 +38,11 @@ class BmiCalculatorsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to bmi_calculators_path, notice: "Cálculo atualizado com sucesso!" }
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace(
-              "edit_bmi_calculator",
-              partial: "bmi_calculators/calculation_result",
-              locals: { calculator: @calculator }
-            ),
-            turbo_stream.replace(
-              "latest_bmi_calculation",
-              partial: "bmi_calculators/calculation_result",
-              locals: { calculator: @calculator }
-            )
-          ]
+          render turbo_stream: turbo_stream.replace(
+            dom_id(@calculator),
+            partial: "bmi_calculators/calculation_result",
+            locals: { calculator: @calculator }
+          )
         end
       end
     else
@@ -64,7 +55,6 @@ class BmiCalculatorsController < ApplicationController
     @calculator.destroy
     redirect_to bmi_calculators_path, notice: "Cálculo excluído com sucesso!"
   end
-
 
   private
 

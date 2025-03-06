@@ -9,7 +9,7 @@ export default class extends Controller {
   }
 
   toggle(){
-    this.profileMenuTarget.classList.contains("invisible") ? this.open() : this.close()
+    this.profileMenuTarget.classList.contains("hidden") ? this.open() : this.close()
   }
 
   hide(e) {
@@ -20,14 +20,10 @@ export default class extends Controller {
   }
 
   open() {
-    this.profileMenuTarget.classList.remove("invisible")
-    this.profileMenuTarget.classList.remove("opacity-0")
+    this.profileMenuTarget.classList.remove("hidden")
   }
 
   close() {
-    this.profileMenuTarget.classList.add("opacity-0")
-    setTimeout(() => {
-      this.profileMenuTarget.classList.add("invisible")
-    }, 300); // Tempo para a animação de fade-out
+    this.profileMenuTarget.classList.add("hidden")
   }
 }

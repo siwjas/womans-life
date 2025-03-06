@@ -1,5 +1,7 @@
 class MenstrualCycleCalculatorsController < ApplicationController
+  include ActionView::RecordIdentifier
   before_action :authenticate_user!
+
   def index
     @latest_menstrual_calculation = current_user.menstrual_cycle_calculators.order(created_at: :desc).first
   end
@@ -24,16 +26,21 @@ class MenstrualCycleCalculatorsController < ApplicationController
 
   def edit
     @calculator = current_user.menstrual_cycle_calculators.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.turbo_stream
-    end
   end
 
   def update
     @calculator = current_user.menstrual_cycle_calculators.find(params[:id])
     if @calculator.update(calculator_params)
-      redirect_to menstrual_cycle_calculators_path, notice: "Cálculo atualizado com sucesso!"
+      respond_to do |format|
+        format.html { redirect_to menstrual_cycle_calculators_path, notice: "Cálculo atualizado com sucesso!" }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            dom_id(@calculator),
+            partial: "menstrual_cycle_calculators/calculation_result",
+            locals: { calculator: @calculator }
+          )
+        end
+      end
     else
       render :edit, alert: "Erro ao atualizar cálculo."
     end
@@ -48,7 +55,7 @@ class MenstrualCycleCalculatorsController < ApplicationController
   private
 
   def calculator_params
-    params.require(:menstrual_cycle_calculator).permit(:last_period_date, :cycle_length, :period_duration)
+    params.require(:menstrual_cycle_calculator).permit(:last_period_date, :cycle_length)
   end
 
   def calculate_periodo_fertil(last_period)

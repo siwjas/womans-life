@@ -1,4 +1,5 @@
 class PregnancyCalculatorsController < ApplicationController
+  include ActionView::RecordIdentifier
   before_action :authenticate_user!
   def index
     @latest_pregnancy_calculation = current_user.pregnancy_calculators.order(created_at: :desc).first
@@ -24,10 +25,6 @@ class PregnancyCalculatorsController < ApplicationController
 
   def edit
     @calculator = current_user.pregnancy_calculators.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.turbo_stream
-    end
   end
 
   def update
@@ -37,7 +34,7 @@ class PregnancyCalculatorsController < ApplicationController
         format.html { redirect_to pregnancy_calculators_path, notice: "Cálculo atualizado com sucesso!" }
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
-            "edit_pregnancy_calculator",
+            dom_id(@calculator),
             partial: "pregnancy_calculators/calculation_result",
             locals: { calculator: @calculator }
           )
