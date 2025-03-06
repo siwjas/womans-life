@@ -4,6 +4,7 @@
     <div class="flex items-center justify-between">
       <div>
         <p class="text-sm text-gray-500">Cálculo realizado em <%= calculator.created_at.strftime("%d/%m/%Y") %></p>
+        <h3 class="text-lg font-semibold text-gray-800">Duração do Ciclo: <%= calculator.cycle_length %> dias</h3>
         <h3 class="text-lg font-semibold text-gray-800">Próximo Ciclo: <%= calculator.next_period_date.strftime("%d/%m/%Y") %></h3>
         <p class="text-sm text-pink-600">
           <span class="font-medium">Janela Fértil: <%= calculator.fertility_window_start.strftime("%d/%m/%Y") %> a <%= calculator.fertility_window_end.strftime("%d/%m/%Y") %></span>
@@ -19,36 +20,6 @@
     <div class="flex items-center space-x-2 mt-2">
       <%= link_to "Editar", edit_menstrual_cycle_calculator_path(calculator), class: "text-blue-600 hover:text-blue-800" %>
       <%= button_to "Excluir", menstrual_cycle_calculator_path(calculator), method: :delete, class: "text-red-600 hover:text-red-800", data: { confirm: "Tem certeza que deseja excluir este cálculo?" } %>
-    </div>
-  </div>
-
-  <div class="mt-6 p-4 bg-pink-50 dark:bg-pink-900 rounded-lg">
-    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Resultado do Cálculo</h3>
-    
-    <div class="space-y-2">
-      <div class="flex justify-between">
-        <span class="text-gray-700 dark:text-gray-300">Próximo ciclo:</span>
-        <span class="font-medium text-gray-900 dark:text-white"><%= l(calculator.next_period_date, format: :long) %></span>
-      </div>
-      
-      <div class="flex justify-between">
-        <span class="text-gray-700 dark:text-gray-300">Período fértil:</span>
-        <span class="font-medium text-gray-900 dark:text-white">
-          <%= l(calculator.fertility_window_start, format: :short) %> até 
-          <%= l(calculator.fertility_window_end, format: :short) %>
-        </span>
-      </div>
-      
-      <div class="flex justify-between">
-        <span class="text-gray-700 dark:text-gray-300">Ovulação:</span>
-        <span class="font-medium text-gray-900 dark:text-white"><%= l(calculator.ovulation_date, format: :long) %></span>
-      </div>
-    </div>
-    
-    <div class="mt-4">
-      <p class="text-sm text-gray-600 dark:text-gray-400">
-        Veja o calendário completo no seu <a href="<%= dashboard_path %>" class="text-pink-600 hover:text-pink-800 dark:text-pink-400 dark:hover:text-pink-300">Dashboard</a>.
-      </p>
     </div>
   </div>
 <% end %>
