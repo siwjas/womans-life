@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+// Não importamos o Chart.js, pois ele está disponível globalmente
 
 export default class extends Controller {
   static values = {
@@ -8,40 +9,53 @@ export default class extends Controller {
   }
   
   connect() {
-    this.createChart()
+    console.log("Weight chart controller connected")
+    if (this.dataValue.length > 1) {
+      this.initializeChart()
+    }
   }
   
-  createChart() {
-    const ctx = document.getElementById('weightChart').getContext('2d')
+  initializeChart() {
+    const ctx = this.element.querySelector('canvas').getContext('2d')
     
-    // Calcular peso ideal baseado na altura
+    // Calcular IMC ideal mínimo e máximo (18.5 e 24.9)
     const heightInMeters = this.heightValue / 100
-    const idealWeight = (22 * heightInMeters * heightInMeters).toFixed(1)
+    const minIdealWeight = (18.5 * heightInMeters * heightInMeters).toFixed(1)
+    const maxIdealWeight = (24.9 * heightInMeters * heightInMeters).toFixed(1)
     
     // Criar o gráfico usando o Chart global
-    new Chart(ctx, {
+    new window.Chart(ctx, {
       type: 'line',
       data: {
         labels: this.labelsValue,
-        datasets: [{
-          label: 'Peso (kg)',
-          data: this.dataValue,
-          backgroundColor: 'rgba(16, 185, 129, 0.2)',
-          borderColor: 'rgba(16, 185, 129, 1)',
-          borderWidth: 2,
-          tension: 0.3,
-          pointRadius: 6,
-          pointHoverRadius: 8
-        },
-        {
-          label: 'Peso Ideal',
-          data: Array(this.labelsValue.length).fill(idealWeight),
-          borderColor: 'rgba(107, 114, 128, 0.5)',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          pointRadius: 0,
-          fill: false
-        }]
+        datasets: [
+          {
+            label: 'Peso (kg)',
+            data: this.dataValue,
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            tension: 0.1,
+            fill: false
+          },
+          {
+            label: 'Peso Mínimo Ideal',
+            data: Array(this.labelsValue.length).fill(minIdealWeight),
+            borderColor: 'rgba(16, 185, 129, 0.5)',
+            borderDash: [5, 5],
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: false
+          },
+          {
+            label: 'Peso Máximo Ideal',
+            data: Array(this.labelsValue.length).fill(maxIdealWeight),
+            borderColor: 'rgba(16, 185, 129, 0.5)',
+            borderDash: [5, 5],
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: '+1'
+          }
+        ]
       },
       options: {
         responsive: true,
@@ -49,59 +63,28 @@ export default class extends Controller {
         scales: {
           y: {
             beginAtZero: false,
-            suggestedMin: Math.min(...this.dataValue) - 2,
-            suggestedMax: Math.max(...this.dataValue) + 2,
-            title: {
-              display: true,
-              text: 'Peso (kg)'
+            grid: {
+              color: 'rgba(200, 200, 200, 0.2)'
             }
           },
           x: {
             grid: {
               display: false
-            },
-            ticks: {
-              maxRotation: 45,
-              minRotation: 45,
-              font: {
-                size: 10
-              },
-              callback: function(value, index, values) {
-                const label = this.getLabelForValue(value);
-                return label;
-              }
             }
           }
         },
         plugins: {
-          legend: {
-            display: true,
-            position: 'top'
-          },
           tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            padding: 10,
-            cornerRadius: 6,
             callbacks: {
-              title: function(context) {
-                return `Medição em: ${context[0].label}`;
-              },
               label: function(context) {
-                if (context.dataset.label === 'Peso Ideal') {
-                  return `Peso Ideal: ${context.parsed.y} kg`;
-                }
-                return `Peso: ${context.parsed.y} kg`;
-              },
-              afterLabel: function(context) {
-                return `Índice: ${context.dataIndex}`;
+                const datasetLabel = context.dataset.label || ''
+                const value = context.parsed.y
+                return `${datasetLabel}: ${value} kg`
               }
             }
           }
         }
       }
     })
-
-    console.log('Labels:', this.labelsValue);
-    console.log('Data:', this.dataValue);
   }
 } 

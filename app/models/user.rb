@@ -14,8 +14,9 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :first_name, presence: true
   validates :last_name, presence: true
+  validates :height, presence: true, numericality: { greater_than: 0 }, allow_nil: true
   validates :agreed_to_terms, acceptance: true
-  validates :password, presence: true, length: { minimum: 6 }
+  validates :password, presence: true, length: { minimum: 6 }, on: :create
 
   # Methods
   def full_name

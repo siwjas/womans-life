@@ -45,15 +45,30 @@ class PagesController < ApplicationController
       }
     end
     
-    # Usar um formato de data mais simples e consistente com fuso horário local
-    @weight_chart_data = @bmi_history.map do |record|
-      local_time = record.created_at.in_time_zone('America/Sao_Paulo')
-      {
-        date: local_time.strftime('%d/%m %H:%M'),
-        weight: record.weight,
-        # Adicionar timestamp completo para depuração
-        full_timestamp: local_time.to_s
-      }
+    # Preparar dados para o gráfico de peso
+    if user_signed_in? && @bmi_history.present?
+      # Determinar se estamos em uma requisição mobile (baseado no user agent)
+      is_mobile = request.user_agent =~ /Mobile|Android|iPhone/
+      
+      # Para dispositivos móveis, reduzir a quantidade de pontos de dados
+      data_points = is_mobile ? @bmi_history.last(10) : @bmi_history
+      
+      @weight_chart_data = data_points.map do |record|
+        local_time = record.created_at.in_time_zone('America/Sao_Paulo')
+        {
+          date: local_time.strftime('%d/%m'),
+          weight: record.weight
+        }
+      end
+      
+      # Preparar dados para o gráfico de IMC
+      @bmi_chart_data = data_points.map do |record|
+        local_time = record.created_at.in_time_zone('America/Sao_Paulo')
+        {
+          date: local_time.strftime('%d/%m'),
+          bmi: record.bmi.round(1)
+        }
+      end
     end
 
     # Adicionar logs para depuração

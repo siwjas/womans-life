@@ -6,6 +6,17 @@
           Editar Perfil
         </h1>
 
+        <% if resource.errors.any? %>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong class="font-bold">Erro ao atualizar perfil:</strong>
+            <ul class="mt-2 list-disc list-inside">
+              <% resource.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-4 md:space-y-6" }) do |f| %>
           <%= render "devise/shared/error_messages", resource: resource %>
 
@@ -19,6 +30,13 @@
             <%= f.text_field :last_name, class: "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder: "Seu sobrenome" %>
           </div>
 
+          <div>
+            <%= f.label :height, "Altura (cm)", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+            <%= f.number_field :height, step: 1, min: 50, max: 250, required: true, class: "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder: "Sua altura em centímetros" %>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Ex. se você tem 1,55m (um metro e cinquenta e cinco centímetros), digite 155.
+            </p>
+          </div>
           <div>
             <%= f.label :email, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
             <%= f.email_field :email, autocomplete: "email", class: "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder: "nome@email.com" %>

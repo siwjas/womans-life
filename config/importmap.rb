@@ -7,3 +7,5 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
 
 # Remover as dependências do FullCalendar que não são mais necessárias
+pin "chart.js" # @4.4.8
+pin "@kurkle/color", to: "@kurkle--color.js" # @0.3.4

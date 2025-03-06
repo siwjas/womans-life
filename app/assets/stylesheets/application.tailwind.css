@@ -44,3 +44,36 @@
   display: inline-block;
   margin-right: 4px;
 }
+
+@layer components {
+  /* Estilos para gráficos em dispositivos móveis */
+  .chart-container-mobile {
+    @apply h-64 md:h-80 w-full overflow-hidden;
+  }
+  
+  /* Ajustar o tamanho da fonte para dispositivos móveis */
+  @media (max-width: 768px) {
+    .chart-title {
+      @apply text-base;
+    }
+    
+    .chart-subtitle {
+      @apply text-xs;
+    }
+  }
+}
+
+/* Estilos para o gráfico de peso */
+.weight-chart-bar {
+  transition: all 0.3s ease;
+}
+
+.weight-chart-bar:hover {
+  transform: scaleY(1.05);
+}
+
+@media (max-width: 768px) {
+  .weight-chart-label {
+    font-size: 0.6rem;
+  }
+}

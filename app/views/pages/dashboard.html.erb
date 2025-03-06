@@ -1,5 +1,5 @@
 <div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-8">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Seu Dashboard Personalizado</h1>
       <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">
@@ -11,7 +11,7 @@
     <section class="mb-10">
       <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Próximos Eventos</h2>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex flex-col md:flex-row gap-4">
         <% if @upcoming_events.present? %>
           <% @upcoming_events.each_with_index do |event, index| %>
             <!-- Adicionar log para depuração -->
@@ -20,69 +20,128 @@
             <% end %>
             
             <% if event[:type] == 'weight' %>
-              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 
-                          <%= event[:status] == 'ideal' ? 'border-green-500' : 
-                             event[:status] == 'lose' ? 'border-rose-500' : 
-                             'border-green-500' %>">
-                <div class="p-5">
-                  <div class="flex justify-between items-start">
-                    <div>
-                      <h3 class="text-lg font-semibold text-gray-800 dark:text-white"><%= event[:name] %></h3>
-                      <p class="text-sm text-gray-600 dark:text-gray-300">
-                        Peso atual: <%= event[:current] %> kg
-                      </p>
-                      <p class="text-sm text-gray-600 dark:text-gray-300">
-                        Peso ideal: <%= event[:target] %> kg
-                      </p>
-                    </div>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-                                <%= event[:status] == 'ideal' ? 'bg-green-100 text-green-800' :
-                                   event[:status] == 'lose' ? 'bg-rose-100 text-rose-800' :
-                                   'bg-blue-100 text-blue-800' %>">
-                      <%= event[:message] %>
-                    </span>
-                  </div>
-                  
-                  <% if event[:status] == 'ideal' %>
-                    <!-- Mensagem de peso ideal com ícone de check -->
-                    <div class="mt-3 flex items-center justify-center py-2 text-green-600">
-                      <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span class="text-sm font-medium">Você está no seu peso ideal!</span>
-                    </div>
-                  <% else %>
-                    <!-- Barra de progresso para quem precisa ganhar ou perder peso -->
-                    <div class="mt-3">
-                      <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                        <% 
-                          # Calcular a porcentagem do progresso
-                          if event[:status] == 'lose'
-                            # Se precisa perder peso, quanto mais próximo do ideal, maior o progresso
-                            max_weight = event[:current] * 1.3  # 30% acima do peso atual como referência máxima
-                            progress = ((max_weight - event[:current]) / (max_weight - event[:target]) * 100).round
-                            progress = [progress, 100].min
-                            progress_color = "bg-rose-500"
-                          else
-                            # Se precisa ganhar peso, quanto mais próximo do ideal, maior o progresso
-                            min_weight = event[:current] * 0.7  # 30% abaixo do peso atual como referência mínima
-                            progress = ((event[:current] - min_weight) / (event[:target] - min_weight) * 100).round
-                            progress = [progress, 100].min
-                            progress_color = "bg-green-500"
-                          end
-                        %>
-                        <div class="<%= progress_color %> h-2.5 rounded-full" style="width: <%= progress %>%"></div>
+              <div class="flex-1 w-full">
+                <div class="flex flex-col gap-4">
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 
+                            <%= event[:status] == 'ideal' ? 'border-green-500' : 
+                              event[:status] == 'lose' ? 'border-rose-500' : 
+                              'border-green-500' %>">
+                  <div class="p-5">
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white"><%= event[:name] %></h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">
+                          Peso atual: <%= event[:current] %> kg
+                        </p>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">
+                          Peso ideal: <%= event[:target] %> kg
+                        </p>
                       </div>
+                      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                  <%= event[:status] == 'ideal' ? 'bg-green-100 text-green-800' :
+                                    event[:status] == 'lose' ? 'bg-rose-100 text-rose-800' :
+                                    'bg-blue-100 text-blue-800' %>">
+                        <%= event[:message] %>
+                      </span>
                     </div>
-                  <% end %>
-                  
-                  <div class="mt-2 text-right">
-                    <%= link_to "Ver detalhes", bmi_calculators_path, class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" %>
+                    
+                    <% if event[:status] == 'ideal' %>
+                      <!-- Mensagem de peso ideal com ícone de check -->
+                      <div class="mt-3 flex items-center justify-center py-2 text-green-600">
+                        <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span class="text-sm font-medium">Você está no seu peso ideal!</span>
+                      </div>
+                    <% else %>
+                      <!-- Barra de progresso para quem precisa ganhar ou perder peso -->
+                      <div class="mt-3">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                          <% 
+                            # Calcular a porcentagem do progresso
+                            if event[:status] == 'lose'
+                              # Se precisa perder peso, quanto mais próximo do ideal, maior o progresso
+                              max_weight = event[:current] * 1.3  # 30% acima do peso atual como referência máxima
+                              progress = ((max_weight - event[:current]) / (max_weight - event[:target]) * 100).round
+                              progress = [progress, 100].min
+                              progress_color = "bg-rose-500"
+                            else
+                              # Se precisa ganhar peso, quanto mais próximo do ideal, maior o progresso
+                              min_weight = event[:current] * 0.7  # 30% abaixo do peso atual como referência mínima
+                              progress = ((event[:current] - min_weight) / (event[:target] - min_weight) * 100).round
+                              progress = [progress, 100].min
+                              progress_color = "bg-green-500"
+                            end
+                          %>
+                          <div class="<%= progress_color %> h-2.5 rounded-full" style="width: <%= progress %>%"></div>
+                        </div>
+                      </div>
+                    <% end %>
+                    
+                    <div class="mt-2 text-right">
+                      <%= link_to "Ver detalhes", bmi_calculators_path, class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" %>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tabela de histórico -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+                  <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-3">Últimas pesagens</h3>
+                  <div class="overflow-y-auto max-h-64">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                      <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                          <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Data</th>
+                          <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">IMC</th>
+                          <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Peso</th>
+                          <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Categoria</th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <% @bmi_history.reverse.each_with_index do |bmi, index| %>
+                          <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                              <%= bmi.created_at.strftime("%d/%m/%Y") %>
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                              <%= bmi.bmi %>
+                              <% if index < @bmi_history.size - 1 %>
+                                <% diff = bmi.bmi - @bmi_history.reverse[index + 1].bmi %>
+                                <% if diff > 0 %>
+                                  <span class="text-rose-500 text-xs ml-1">↑</span>
+                                <% elsif diff < 0 %>
+                                  <span class="text-green-500 text-xs ml-1">↓</span>
+                                <% end %>
+                              <% end %>
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                              <%= bmi.weight %> kg
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">
+                              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                          <%= bmi.bmi < 18.5 ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
+                                            bmi.bmi < 25 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
+                                            bmi.bmi < 30 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                                            'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' %>">
+                                <%= bmi.bmi_category %>
+                              </span>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="mt-4 text-right">
+                    <%= link_to "Adicionar nova pesagem", bmi_calculators_path, 
+                        class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" %>
                   </div>
                 </div>
               </div>
+              </div>
+
             <% elsif event[:type] == 'period' && @latest_menstrual %>
-              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 border-pink-500">
+              <div class="flex-1 w-full bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 border-pink-500">
                 <div class="p-5">
                   <div class="flex justify-between items-start">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Próximo Ciclo Menstrual</h3>
@@ -182,7 +241,7 @@
       </div>
     </section>
 
-    <!-- Após a seção de Próximos Eventos, adicionar uma nova seção para o Calendário Menstrual -->
+    <!-- Calendário Menstrual -->
     <% if @latest_menstrual %>
       <section class="mb-10">
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Seu Ciclo Menstrual</h2>
@@ -391,40 +450,41 @@
       </div>
     </section>
 
+
     <% if @bmi_history.present? && @bmi_history.size > 1 %>
       <!-- Gráfico de IMC -->
       <section class="mb-10">
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Histórico de IMC</h2>
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="w-full">
           <!-- Gráfico de IMC -->
-          <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4" data-controller="chart-switcher">
+          <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4" data-controller="chart-toggle">
             <div class="flex justify-between items-center mb-4">
               <h3 class="text-lg font-medium text-gray-800 dark:text-white">Evolução da Saúde</h3>
               <div class="flex space-x-2">
-                <button data-chart-switcher-target="bmiButton" 
-                        data-action="click->chart-switcher#showBmi"
+                <button data-chart-toggle-target="bmiButton" 
+                        data-action="click->chart-toggle#showBmi"
                         class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
                   IMC
                 </button>
-                <button data-chart-switcher-target="weightButton" 
-                        data-action="click->chart-switcher#showWeight"
+                <button data-chart-toggle-target="weightButton" 
+                        data-action="click->chart-toggle#showWeight"
                         class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                   Peso
                 </button>
               </div>
             </div>
             
-            <!-- Gráfico de IMC -->
-            <div data-chart-switcher-target="bmiChart" class="h-64" data-controller="chart" 
+            <!-- Gráfico de IMC (gráfico de linha) -->
+            <div data-chart-toggle-target="bmiChart" class="h-64" data-controller="chart" 
                  data-chart-labels-value="<%= @bmi_history.map { |b| b.created_at.strftime('%d/%m/%Y') }.to_json %>"
                  data-chart-data-value="<%= @bmi_history.map(&:bmi).to_json %>"
                  data-chart-categories-value="true">
               <canvas id="bmiChart"></canvas>
             </div>
             
-            <!-- Gráfico de Peso -->
-            <div data-chart-switcher-target="weightChart" class="h-64 hidden" data-controller="weight-chart" 
+            <!-- Gráfico de Peso (gráfico de linha) -->
+            <div data-chart-toggle-target="weightChart" class="h-64 hidden" data-controller="weight-chart" 
                  data-weight-chart-labels-value="<%= @weight_chart_data.present? ? @weight_chart_data.map { |d| d[:date] }.to_json : [].to_json %>"
                  data-weight-chart-data-value="<%= @weight_chart_data.present? ? @weight_chart_data.map { |d| d[:weight] }.to_json : [].to_json %>"
                  data-weight-chart-height-value="<%= @bmi_history.first&.height || 0 %>">
@@ -457,62 +517,41 @@
               </div>
             </div>
           </div>
-          
-          <!-- Tabela de histórico -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-3">Últimas pesagens</h3>
-            <div class="overflow-y-auto max-h-64">
-              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-700">
-                  <tr>
-                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Data</th>
-                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">IMC</th>
-                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Peso</th>
-                    <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Categoria</th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  <% @bmi_history.reverse.each_with_index do |bmi, index| %>
-                    <tr>
-                      <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        <%= bmi.created_at.strftime("%d/%m/%Y") %>
-                      </td>
-                      <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                        <%= bmi.bmi %>
-                        <% if index < @bmi_history.size - 1 %>
-                          <% diff = bmi.bmi - @bmi_history.reverse[index + 1].bmi %>
-                          <% if diff > 0 %>
-                            <span class="text-rose-500 text-xs ml-1">↑</span>
-                          <% elsif diff < 0 %>
-                            <span class="text-green-500 text-xs ml-1">↓</span>
-                          <% end %>
-                        <% end %>
-                      </td>
-                      <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        <%= bmi.weight %> kg
-                      </td>
-                      <td class="px-3 py-2 whitespace-nowrap text-sm">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    <%= bmi.bmi < 18.5 ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
-                                       bmi.bmi < 25 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' :
-                                       bmi.bmi < 30 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' :
-                                       'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' %>">
-                          <%= bmi.bmi_category %>
-                        </span>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-            <div class="mt-4 text-right">
-              <%= link_to "Adicionar nova pesagem", bmi_calculators_path, 
-                  class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300" %>
-            </div>
-          </div>
         </div>
       </section>
     <% end %>
+
+    <!-- Seção do gráfico de peso -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Histórico de Peso</h2>
+      
+      <div class="w-full">
+        <!-- Gráfico -->
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+          <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-3">Evolução do Peso</h3>
+          
+          <div class="h-64 md:h-80">
+            <% if @weight_chart_data.present? && @weight_chart_data.size > 1 %>
+              <div 
+                data-controller="simple-weight-chart" 
+                data-simple-weight-chart-data-value="<%= @weight_chart_data.to_json %>"
+                class="w-full h-full"
+              ></div>
+              
+              <div class="mt-2 text-xs text-gray-500 dark:text-gray-400 md:hidden">
+                <p>Dica: Toque nas barras para ver detalhes.</p>
+              </div>
+            <% else %>
+              <div class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                <p>Dados insuficientes para exibir o gráfico de peso/IMC.</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        
+        <!-- Resto do conteúdo permanece o mesmo -->
+      </div>
+    </section>
 
     <!-- Dicas Personalizadas -->
     <section>
