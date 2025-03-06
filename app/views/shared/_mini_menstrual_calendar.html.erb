@@ -1,0 +1,12 @@
+<div 
+  data-controller="mini-menstrual-calendar"
+  data-mini-menstrual-calendar-last-period-value="<%= calculator.last_period_date.to_s %>"
+  data-mini-menstrual-calendar-next-period-value="<%= calculator.next_period_date.to_s %>"
+  data-mini-menstrual-calendar-fertility-start-value="<%= calculator.fertility_window_start.to_s %>"
+  data-mini-menstrual-calendar-fertility-end-value="<%= calculator.fertility_window_end.to_s %>"
+  data-mini-menstrual-calendar-ovulation-date-value="<%= calculator.ovulation_date.to_s %>"
+  data-mini-menstrual-calendar-cycle-length-value="<%= calculator.cycle_length %>"
+  data-mini-menstrual-calendar-card-type-value="<%= card_type %>"
+>
+  <div id="mini-calendar-<%= card_type %>-<%= calculator.id %>" class="min-h-[250px]"></div>
+</div> 

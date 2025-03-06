@@ -9,8 +9,15 @@ class UpcomingEventsService
     latest_pregnancy = user.pregnancy_calculators.order(created_at: :desc).first
     latest_bmi = user.bmi_calculators.order(created_at: :desc).first
     
+    # Adicionar logs para depuração
+    Rails.logger.debug "Latest menstrual calculation found: #{latest_menstrual.present?}"
+    
     # Adicionar eventos do ciclo menstrual
-    events.concat(menstrual_events(latest_menstrual)) if latest_menstrual
+    if latest_menstrual
+      menstrual_events = self.menstrual_events(latest_menstrual)
+      Rails.logger.debug "Menstrual events: #{menstrual_events.inspect}"
+      events.concat(menstrual_events)
+    end
     
     # Adicionar eventos da gravidez
     events.concat(pregnancy_events(latest_pregnancy)) if latest_pregnancy
@@ -19,50 +26,35 @@ class UpcomingEventsService
     events.concat(bmi_events(latest_bmi)) if latest_bmi
     
     # Ordenar eventos por proximidade
-    events.sort_by! { |event| event[:days_away] }
+    sorted_events = events.sort_by { |event| event[:days_away] }
+    
+    # Log dos eventos ordenados
+    Rails.logger.debug "Sorted events: #{sorted_events.inspect}"
+    
+    sorted_events
   end
   
   def self.menstrual_events(calculator)
+    return [] unless calculator
+    
     events = []
     
-    # Adicionar próximo período menstrual
+    # Evento para o próximo ciclo
     events << {
-      name: "Próximo ciclo menstrual",
+      name: "Próximo Ciclo Menstrual",
       date: calculator.next_period_date,
+      end_date: calculator.next_period_date + (calculator.period_duration || 5).days,
       days_away: (calculator.next_period_date - Date.today).to_i,
-      type: "menstrual"
+      type: "period"
     }
     
-    # Adicionar janela fértil
-    fertility_start = calculator.fertility_window_start
-    fertility_end = calculator.fertility_window_end
-    
-    if Date.today >= fertility_start && Date.today <= fertility_end
-      # Estamos dentro da janela fértil
+    # Evento para o período fértil
+    if calculator.fertility_window_start > Date.today
       events << {
-        name: "Janela fértil",
-        date: fertility_start,
-        end_date: fertility_end,
-        days_away: 0,
-        type: "fertility",
-        status: "current"
-      }
-    elsif Date.today < fertility_start
-      # Janela fértil ainda não começou
-      events << {
-        name: "Janela fértil",
-        date: fertility_start,
-        end_date: fertility_end,
-        days_away: (fertility_start - Date.today).to_i,
-        type: "fertility"
-      }
-    elsif Date.today > fertility_end && fertility_start > Date.today
-      # Próxima janela fértil (do próximo ciclo)
-      events << {
-        name: "Próxima janela fértil",
-        date: fertility_start,
-        end_date: fertility_end,
-        days_away: (fertility_start - Date.today).to_i,
+        name: "Período Fértil",
+        date: calculator.fertility_window_start,
+        end_date: calculator.fertility_window_end,
+        days_away: (calculator.fertility_window_start - Date.today).to_i,
         type: "fertility"
       }
     end

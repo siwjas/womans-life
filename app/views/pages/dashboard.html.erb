@@ -11,9 +11,14 @@
     <section class="mb-10">
       <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Próximos Eventos</h2>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <% if @upcoming_events.present? %>
-          <% @upcoming_events.each do |event| %>
+          <% @upcoming_events.each_with_index do |event, index| %>
+            <!-- Adicionar log para depuração -->
+            <% if Rails.env.development? %>
+              <% puts "Rendering event #{index}: #{event[:type]}" %>
+            <% end %>
+            
             <% if event[:type] == 'weight' %>
               <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 
                           <%= event[:status] == 'ideal' ? 'border-green-500' : 
@@ -76,6 +81,57 @@
                   </div>
                 </div>
               </div>
+            <% elsif event[:type] == 'period' && @latest_menstrual %>
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 border-pink-500">
+                <div class="p-5">
+                  <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Próximo Ciclo Menstrual</h3>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-pink-100 text-pink-800">
+                      Em <%= event[:days_away] %> dias
+                    </span>
+                  </div>
+                  
+                  <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    Data prevista: <%= event[:date].strftime("%d/%m/%Y") %>
+                  </p>
+                  
+                  <!-- Calendário simplificado em vez do mini-calendário -->
+                  <%= render 'shared/simple_calendar', date: event[:date], bg_color: 'bg-pink-50' do |date| %>
+                    <% is_period_day = (date >= event[:date] && date <= event[:date] + 5.days) %>
+                    <% is_period_day ? 'bg-pink-500 text-white' : '' %>
+                  <% end %>
+                </div>
+              </div>
+            <% elsif event[:type] == 'fertility' && @latest_menstrual %>
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 border-green-500">
+                <div class="p-5">
+                  <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Período Fértil</h3>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                      Em <%= event[:days_away] %> dias
+                    </span>
+                  </div>
+                  
+                  <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    De <%= event[:date].strftime("%d/%m/%Y") %> até <%= event[:end_date].strftime("%d/%m/%Y") %>
+                  </p>
+                  
+                  <!-- Calendário simplificado em vez do mini-calendário -->
+                  <%= render 'shared/simple_calendar', date: event[:date], bg_color: 'bg-green-50' do |date| %>
+                    <% is_fertile_day = (date >= event[:date] && date <= event[:end_date]) %>
+                    <% is_ovulation_day = (date == event[:date] + 3.days) %>
+                    <% 
+                      if is_ovulation_day
+                        'bg-green-500 text-white'
+                      elsif is_fertile_day
+                        'bg-green-200 text-green-800'
+                      else
+                        ''
+                      end
+                    %>
+                  <% end %>
+                </div>
+              </div>
             <% else %>
               <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 
                           <%= event[:type] == 'menstrual' ? 'border-pink-500' : 
@@ -125,6 +181,112 @@
         <% end %>
       </div>
     </section>
+
+    <!-- Após a seção de Próximos Eventos, adicionar uma nova seção para o Calendário Menstrual -->
+    <% if @latest_menstrual %>
+      <section class="mb-10">
+        <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Seu Ciclo Menstrual</h2>
+        
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Informações do ciclo -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Informações do Ciclo</h3>
+              
+              <div class="space-y-4">
+                <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
+                  <span class="text-gray-700 dark:text-gray-300">Último ciclo:</span>
+                  <span class="font-medium text-gray-900 dark:text-white"><%= l(@latest_menstrual.last_period_date, format: :long) %></span>
+                </div>
+                
+                <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
+                  <span class="text-gray-700 dark:text-gray-300">Próximo ciclo:</span>
+                  <span class="font-medium text-gray-900 dark:text-white"><%= l(@latest_menstrual.next_period_date, format: :long) %></span>
+                </div>
+                
+                <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
+                  <span class="text-gray-700 dark:text-gray-300">Duração do ciclo:</span>
+                  <span class="font-medium text-gray-900 dark:text-white"><%= @latest_menstrual.cycle_length %> dias</span>
+                </div>
+                
+                <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
+                  <span class="text-gray-700 dark:text-gray-300">Período fértil:</span>
+                  <span class="font-medium text-gray-900 dark:text-white">
+                    <%= l(@latest_menstrual.fertility_window_start, format: :short) %> até 
+                    <%= l(@latest_menstrual.fertility_window_end, format: :short) %>
+                  </span>
+                </div>
+                
+                <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
+                  <span class="text-gray-700 dark:text-gray-300">Ovulação:</span>
+                  <span class="font-medium text-gray-900 dark:text-white"><%= l(@latest_menstrual.ovulation_date, format: :long) %></span>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <%= link_to "Atualizar Ciclo", menstrual_cycle_calculators_path, class: "inline-flex items-center px-4 py-2 bg-pink-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-pink-700 active:bg-pink-800 focus:outline-none focus:border-pink-800 focus:ring ring-pink-300 disabled:opacity-25 transition ease-in-out duration-150" %>
+              </div>
+            </div>
+            
+            <!-- Calendário -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Visualização do Ciclo</h3>
+              
+              <!-- Calendário simplificado para o ciclo menstrual -->
+              <%= render 'shared/simple_calendar', date: @latest_menstrual.next_period_date, bg_color: 'bg-pink-50' do |date| %>
+                <% 
+                  # Verificar se é um dia de período menstrual
+                  is_last_period = (date >= @latest_menstrual.last_period_date && 
+                                    date <= @latest_menstrual.last_period_date + @latest_menstrual.period_duration.days)
+                  
+                  is_next_period = (date >= @latest_menstrual.next_period_date && 
+                                    date <= @latest_menstrual.next_period_date + @latest_menstrual.period_duration.days)
+                  
+                  # Verificar se é um dia fértil
+                  is_fertile = (date >= @latest_menstrual.fertility_window_start && 
+                                date <= @latest_menstrual.fertility_window_end)
+                  
+                  # Verificar se é o dia da ovulação
+                  is_ovulation = (date == @latest_menstrual.ovulation_date)
+                  
+                  if is_last_period
+                    'bg-pink-300 text-pink-800'
+                  elsif is_next_period
+                    'bg-pink-500 text-white'
+                  elsif is_ovulation
+                    'bg-green-500 text-white'
+                  elsif is_fertile
+                    'bg-green-200 text-green-800'
+                  else
+                    ''
+                  end
+                %>
+              <% end %>
+              
+              <!-- Legenda -->
+              <div class="mt-4 flex flex-wrap gap-4">
+                <div class="flex items-center">
+                  <div class="w-4 h-4 rounded-full bg-pink-300 mr-2"></div>
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Último Ciclo</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-4 h-4 rounded-full bg-pink-500 mr-2"></div>
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Próximo Ciclo</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-4 h-4 rounded-full bg-green-200 mr-2"></div>
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Período Fértil</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Ovulação</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    <% end %>
 
     <!-- Resumo das Calculadoras -->
     <section class="mb-10">

@@ -13,3 +13,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// Manipulador de erros global para depuração
+window.addEventListener('error', function(event) {
+  console.error('JavaScript error:', event.error);
+  
+  // Adicionar mais detalhes para erros de módulo
+  if (event.error && event.error.message && event.error.message.includes('Failed to resolve module')) {
+    console.error('Module resolution error details:', {
+      message: event.error.message,
+      stack: event.error.stack
+    });
+  }
+});

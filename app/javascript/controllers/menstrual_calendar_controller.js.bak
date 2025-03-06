@@ -1,0 +1,149 @@
+import { Controller } from "@hotwired/stimulus"
+import { Calendar } from '@fullcalendar/core'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import ptBrLocale from '@fullcalendar/core/locales/pt-br'
+
+export default class extends Controller {
+  static values = {
+    lastPeriod: String,
+    nextPeriod: String,
+    fertilityStart: String,
+    fertilityEnd: String,
+    ovulationDate: String,
+    cycleLength: Number
+  }
+
+  connect() {
+    this.initializeCalendar()
+  }
+
+  initializeCalendar() {
+    const calendarEl = document.getElementById('menstrual-calendar')
+    
+    if (!calendarEl) {
+      console.error('Elemento do calendário não encontrado')
+      return
+    }
+    
+    // Preparar eventos para o calendário
+    const events = this.prepareEvents()
+    
+    // Inicializar o calendário
+    const calendar = new Calendar(calendarEl, {
+      plugins: [dayGridPlugin, interactionPlugin],
+      initialView: 'dayGridMonth',
+      locale: ptBrLocale,
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth'
+      },
+      events: events,
+      eventClick: this.handleEventClick.bind(this),
+      eventDidMount: this.customizeEventDisplay.bind(this)
+    })
+    
+    calendar.render()
+  }
+  
+  prepareEvents() {
+    const events = []
+    
+    // Último período
+    if (this.lastPeriodValue) {
+      const lastPeriodDate = new Date(this.lastPeriodValue)
+      const endDate = new Date(lastPeriodDate)
+      endDate.setDate(endDate.getDate() + 5) // Assumindo 5 dias de duração
+      
+      events.push({
+        title: 'Último Ciclo',
+        start: this.lastPeriodValue,
+        end: endDate.toISOString().split('T')[0],
+        color: '#d53f8c', // Rosa escuro
+        textColor: 'white',
+        type: 'period'
+      })
+    }
+    
+    // Próximo período
+    if (this.nextPeriodValue) {
+      const nextPeriodDate = new Date(this.nextPeriodValue)
+      const endDate = new Date(nextPeriodDate)
+      endDate.setDate(endDate.getDate() + 5) // Assumindo 5 dias de duração
+      
+      events.push({
+        title: 'Próximo Ciclo',
+        start: this.nextPeriodValue,
+        end: endDate.toISOString().split('T')[0],
+        color: '#f687b3', // Rosa médio
+        textColor: 'white',
+        type: 'period'
+      })
+    }
+    
+    // Período fértil
+    if (this.fertilityStartValue && this.fertilityEndValue) {
+      events.push({
+        title: 'Período Fértil',
+        start: this.fertilityStartValue,
+        end: this.fertilityEndValue,
+        color: '#9ae6b4', // Verde claro
+        textColor: 'black',
+        type: 'fertility'
+      })
+    }
+    
+    // Ovulação
+    if (this.ovulationDateValue) {
+      events.push({
+        title: 'Ovulação',
+        start: this.ovulationDateValue,
+        allDay: true,
+        color: '#38a169', // Verde escuro
+        textColor: 'white',
+        type: 'ovulation'
+      })
+    }
+    
+    return events
+  }
+  
+  handleEventClick(info) {
+    const eventType = info.event.extendedProps.type
+    let message = ''
+    
+    switch(eventType) {
+      case 'period':
+        message = 'Período menstrual: Fluxo sanguíneo e possíveis cólicas.'
+        break
+      case 'fertility':
+        message = 'Período fértil: Maior probabilidade de gravidez nestes dias.'
+        break
+      case 'ovulation':
+        message = 'Ovulação: Dia com maior chance de fertilização.'
+        break
+    }
+    
+    if (message) {
+      alert(message)
+    }
+  }
+  
+  customizeEventDisplay(info) {
+    // Adicionar ícones ou estilos personalizados aos eventos
+    const eventType = info.event.extendedProps.type
+    
+    if (eventType === 'ovulation') {
+      const dotEl = document.createElement('div')
+      dotEl.className = 'ovulation-dot'
+      dotEl.style.width = '10px'
+      dotEl.style.height = '10px'
+      dotEl.style.borderRadius = '50%'
+      dotEl.style.backgroundColor = '#38a169'
+      dotEl.style.margin = '0 auto'
+      
+      info.el.querySelector('.fc-event-title').prepend(dotEl)
+    }
+  }
+} 

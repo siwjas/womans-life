@@ -1,0 +1,26 @@
+<div class="mt-4 p-4 <%= bg_color %> rounded-lg" data-controller="simple-calendar" data-simple-calendar-date-value="<%= date.to_s %>">
+  <div class="text-center font-semibold mb-2"><%= l(date, format: '%B %Y') %></div>
+  <div class="grid grid-cols-7 gap-1 text-center">
+    <% ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].each do |day| %>
+      <div class="text-xs font-medium text-gray-500"><%= day %></div>
+    <% end %>
+    
+    <% first_day = date.beginning_of_month.wday %>
+    <% days_in_month = date.end_of_month.day %>
+    
+    <% first_day.times do %>
+      <div class="h-8"></div>
+    <% end %>
+    
+    <% (1..days_in_month).each do |day| %>
+      <% current_date = Date.new(date.year, date.month, day) %>
+      <% is_special_day = yield(current_date) if block_given? %>
+      
+      <div class="calendar-day h-8 flex items-center justify-center text-xs rounded-full
+        <%= is_special_day || '' %>"
+        data-date="<%= current_date.strftime('%Y-%m-%d') %>">
+        <%= day %>
+      </div>
+    <% end %>
+  </div>
+</div> 

@@ -11,3 +11,36 @@
 }
 
 */
+
+/* Estilos para o calendário menstrual */
+.fc-event {
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.fc-event-title {
+  font-weight: 500;
+  padding: 2px 4px;
+}
+
+.fc-day-today {
+  background-color: rgba(236, 72, 153, 0.1) !important;
+}
+
+.fc-button-primary {
+  @apply bg-pink-600 border-pink-600;
+}
+
+.fc-button-primary:hover {
+  @apply bg-pink-700 border-pink-700;
+}
+
+.fc-button-primary:not(:disabled).fc-button-active, 
+.fc-button-primary:not(:disabled):active {
+  @apply bg-pink-800 border-pink-800;
+}
+
+.ovulation-dot {
+  display: inline-block;
+  margin-right: 4px;
+}

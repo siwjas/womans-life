@@ -4,6 +4,9 @@ class MenstrualCycleCalculatorsController < ApplicationController
 
   def index
     @latest_menstrual_calculation = current_user.menstrual_cycle_calculators.order(created_at: :desc).first
+    
+    # Buscar histórico de ciclos para exibir no calendário
+    @menstrual_history = current_user.menstrual_cycle_calculators.order(created_at: :desc).limit(6)
   end
 
   def create
@@ -55,7 +58,7 @@ class MenstrualCycleCalculatorsController < ApplicationController
   private
 
   def calculator_params
-    params.require(:menstrual_cycle_calculator).permit(:last_period_date, :cycle_length)
+    params.require(:menstrual_cycle_calculator).permit(:last_period_date, :cycle_length, :period_duration)
   end
 
   def calculate_periodo_fertil(last_period)
