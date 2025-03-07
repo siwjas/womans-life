@@ -6,6 +6,13 @@ if [ -z "${LD_PRELOAD+x}" ]; then
     export LD_PRELOAD
 fi
 
-# Add any container initialization steps here
+# Adicionar logs para depuração
+echo "Starting docker-entrypoint script"
 
+# Verificar variáveis de ambiente
+echo "PORT: ${PORT}"
+echo "RAILS_ENV: ${RAILS_ENV}"
+
+# Executar o comando fornecido
+echo "Executing command: $@"
 exec "${@}"

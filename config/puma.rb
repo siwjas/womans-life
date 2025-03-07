@@ -30,8 +30,8 @@ threads threads_count, threads_count
 
 preload_app!
 
-port        ENV['PORT']     || 3000
-environment ENV['RAILS_ENV'] || 'development'
+port        ENV.fetch("PORT") { 8080 }
+environment ENV.fetch("RAILS_ENV") { "development" }
 
 on_worker_boot do
   ActiveRecord::Base.establish_connection
@@ -46,3 +46,6 @@ plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
+
+# Garantir que o Puma esteja ouvindo no endereço correto
+bind "tcp://0.0.0.0:#{ENV.fetch("PORT") { 8080 }}"

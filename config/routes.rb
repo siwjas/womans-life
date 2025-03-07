@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    sessions: 'users/sessions'
   }
   get "pages/home"
   root "pages#home"
@@ -18,5 +19,6 @@ Rails.application.routes.draw do
   # Rota para a página de perfil
   resource :profile, only: [ :show ]
 
+  # Rota de health check explícita
   get "up" => "rails/health#show", as: :rails_health_check
 end

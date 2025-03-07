@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for vida-de-mulher on 2025-03-02T22:07:56-03:00
+# fly.toml app configuration file generated for moms-life on 2025-03-07T06:27:54-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'vida-de-mulher'
+app = 'moms-life'
 primary_region = 'dfw'
 console_command = '/rails/bin/rails console'
 
@@ -16,7 +16,7 @@ console_command = '/rails/bin/rails console'
   PORT = '8080'
 
 [processes]
-  app = './bin/rake litestream:run ./bin/rails server'
+  app = "./bin/rails server -b 0.0.0.0 -p 8080"
 
 [[mounts]]
   source = 'data'
@@ -25,34 +25,20 @@ console_command = '/rails/bin/rails console'
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
-  processes = ['app']
+  processes = ["app"]
 
+  # Adicionar um health check simples
   [[http_service.checks]]
     interval = '10s'
-    timeout = '10s'
-    grace_period = '15s'
+    timeout = '5s'
+    grace_period = '30s'
     method = 'GET'
     path = '/up'
     protocol = 'http'
     tls_skip_verify = false
-
-    [http_service.checks.headers]
-      X-Forwarded-Proto = 'https'
-
-  [[http_service.checks]]
-    interval = '10s'
-    timeout = '2s'
-    grace_period = '5s'
-    method = 'GET'
-    path = '/up'
-    protocol = 'http'
-    tls_skip_verify = false
-
-    [http_service.checks.headers]
-      X-Forwarded-Proto = 'https'
 
 [[vm]]
   memory = '1gb'

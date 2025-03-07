@@ -24,7 +24,15 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = "no-reply@vidademulher.com"
+  
+  # Verificar se estamos no ambiente de build do Docker
+  if ENV['RAILS_ENV'] == 'production' && ENV['DOCKER_BUILD'] == 'true'
+    # Durante o build, use um valor padrão
+    config.mailer_sender = 'placeholder@example.com'
+  else
+    # Em tempo de execução, use o valor real
+    config.mailer_sender = "no-reply@vidademulher.com"
+  end
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
