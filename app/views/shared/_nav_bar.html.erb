@@ -181,6 +181,49 @@
                 px-4 py-2 md:px-5 dark:bg-pink-600 dark:hover:bg-pink-700 focus:outline-none dark:focus:ring-pink-800" %>
           </div>
         <% end %>
+        <!-- Adicionar o botão de tema dentro da barra de navegação, geralmente próximo aos outros botões/links -->
+        <div data-controller="theme" class="ml-3">
+          <button 
+            data-action="click->theme#toggle"
+            data-theme-target="toggle"
+            class="p-2 rounded-full text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-800"
+            aria-label="Alternar tema"
+          >
+            <!-- Ícone para o tema claro (sol) -->
+            <svg 
+              data-theme-target="lightIcon" 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-6 w-6" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" 
+              />
+            </svg>
+            
+            <!-- Ícone para o tema escuro (lua) -->
+            <svg 
+              data-theme-target="darkIcon" 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-6 w-6 hidden" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" 
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>
