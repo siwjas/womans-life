@@ -4,7 +4,11 @@ import "@hotwired/stimulus"
 import "@hotwired/stimulus-loading"
 import "controllers"
 import "chartkick"
-import "Chart.bundle"
+import "highcharts"
+
+import Highcharts from "highcharts"
+
+window.Highcharts = Highcharts
 
 
 // Navbar toggle

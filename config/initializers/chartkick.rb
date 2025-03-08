@@ -7,22 +7,24 @@ Chartkick.options = {
   suffix: "",
   round: 2,
   loading: "Carregando dados...",
+  adapter: "highcharts",
   library: {
-    plugins: {
-      legend: {
-        position: 'bottom'
+    chart: {
+      style: {
+        fontFamily: "'Inter', 'Helvetica', 'Arial', sans-serif"
       }
     },
-    scales: {
-      x: {
-        grid: {
-          display: false
-        }
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: '#E5E7EB'
+    credits: {
+      enabled: false
+    },
+    plotOptions: {
+      series: {
+        animation: {
+          duration: 1000
+        },
+        marker: {
+          enabled: true,
+          radius: 4
         }
       }
     }

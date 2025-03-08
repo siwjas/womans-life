@@ -9,6 +9,7 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 # Chartkick
 pin "chartkick", to: "chartkick.js"
 pin "Chart.bundle", to: "Chart.bundle.js"
+pin "highcharts"
 
 # Adicionar o plugin de anotação
 pin "@kurkle/color", to: "@kurkle--color.js" # @0.3.4

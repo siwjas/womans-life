@@ -54,6 +54,7 @@ class PagesController < ApplicationController
     # Calcular peso ideal baseado na altura (IMC entre 18.5 e 24.9)
     if user_signed_in? && current_user.height.present?
       height_in_meters = current_user.height / 100.0
+      @underweight_threshold = (18.5 * (height_in_meters**2)).round(1)
       @ideal_weight_min = (18.5 * (height_in_meters**2)).round(1)
       @ideal_weight_max = (24.9 * (height_in_meters**2)).round(1)
       @overweight_threshold = (25 * (height_in_meters**2)).round(1)
