@@ -58,6 +58,7 @@ class PagesController < ApplicationController
       @ideal_weight_min = (18.5 * (height_in_meters**2)).round(1)
       @ideal_weight_max = (24.9 * (height_in_meters**2)).round(1)
       @overweight_threshold = (25 * (height_in_meters**2)).round(1)
+      @obesity_threshold = (30 * (height_in_meters**2)).round(1)
     end
     
     # Adicionar logs para depuração

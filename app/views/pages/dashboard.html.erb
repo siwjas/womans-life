@@ -353,10 +353,12 @@
           
           <!-- Botões de Toggle -->
           <div class="flex space-x-2">
-            <button data-chart-toggle-target="weightButton" data-action="click->chart-toggle#showWeightChart" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <button data-chart-toggle-target="weightButton" data-action="click->chart-toggle#showWeightChart" 
+                  class="px-2 py-1 bg-gray-200 font-semibold text-xs text-white outline-none rounded-md hover:text-white active:bg-pink-500 hover:bg-pink-400 focus:bg-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2">
               Peso
             </button>
-            <button data-chart-toggle-target="bmiButton" data-action="click->chart-toggle#showBmiChart" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+            <button data-chart-toggle-target="bmiButton" data-action="click->chart-toggle#showBmiChart" 
+                    class="px-2 py-1 bg-gray-200 font-semibold text-xs text-white outline-none rounded-md hover:text-white active:bg-[#7400b8] hover:bg-[#c77dff] focus:bg-[#c77dff] focus:outline-none focus:ring-2 focus:ring-[#7400b8] focus:ring-offset-2">
               IMC
             </button>
           </div>
@@ -366,24 +368,24 @@
         <div class="relative">
           <!-- Gráfico de Peso -->
           <div data-chart-toggle-target="weightChart" class="h-80">
-            <%= line_chart @weight_data.pluck(:created_at, :weight), 
+            <%= line_chart @weight_data.pluck(:created_at, :weight), download: true, 
                 points: true,
                 curve: true,
                 colors: ["#10B981"],
-                min: (@weight_data.minimum(:weight).to_i - 3),
-                max: (@weight_data.maximum(:weight).to_i + 3),
+                min: (@weight_data.minimum(:weight).to_i - 7),
+                max: (@weight_data.maximum(:weight).to_i + 10),
                 library: {
                   chart: {
                     type: 'spline',
                     zoomType: 'xy'
                   },
                   title: {
-                    text: 'Histórico de Peso (kg)'
+                    text: 'Histórico de Peso (kg)',
                   },
                   xAxis: {
                     type: 'datetime',
                     title: {
-                      text: 'Data'
+                      text: 'Data da pesagem'
                     },
                     labels: {
                       rotation: -45,
@@ -395,57 +397,62 @@
                   },
                   yAxis: {
                     title: {
-                      text: 'Peso (kg)'
+                      text: 'Peso (kg)',
+                      style: {
+                        fontWeight: 'bold',
+                        color: '#ff6700',
+                        fontSize: '20px'
+                      }
                     },
-                    min: (@weight_data.minimum(:weight).to_i - 3),
-                    max: (@weight_data.maximum(:weight).to_i + 3),
+                    min: ((@underweight_threshold.to_i) - 2),
+                    max: ((@obesity_threshold.to_i) + 2),
                     tickInterval: 1, # Incremento de 1 em 1
                     gridLineWidth: 1,
                     plotLines: [
                       {
-                        value: @underweight_threshold,
-                        color: '#3B82F6',
+                        value: @ideal_weight_min.to_i,
+                        color: '#ff9f1c',
                         dashStyle: 'shortdash',
                         width: 2,
                         label: {
-                          text: "Abaixo do Peso (#{@underweight_threshold}kg)",
+                          text: "Peso ideal: ( mínimo #{ @ideal_weight_min.to_i }kg )",
                           align: 'left',
                           style: {
-                            color: '#3B82F6',
+                            color: '#004e98',
                             fontWeight: 'bold'
                           }
                         },
                         zIndex: 3
                       },
                       {
-                        value: @ideal_weight_min,
-                        color: '#10B981',
+                        value: @ideal_weight_max.to_i,
+                        color: '#8ac926',
                         dashStyle: 'shortdash',
                         width: 2,
                         label: {
-                          text: "Peso Ideal Mínimo (#{@ideal_weight_min}kg)",
+                          text: "Peso ideal: ( máximo #{ @ideal_weight_max.to_i }kg )",
                           align: 'left',
                           style: {
-                            color: '#10B981',
+                            color: '#004e98',
                             fontWeight: 'bold'
                           }
                         },
-                        zIndex: 3
+                        zIndex: 5
                       },
                       {
-                        value: @overweight_threshold,
-                        color: '#F59E0B',
+                        value: @obesity_threshold.to_i,
+                        color: '#EF4444',
                         dashStyle: 'shortdash',
                         width: 2,
                         label: {
-                          text: "Sobrepeso (#{@overweight_threshold}kg)",
+                          text: "Obesidade ( #{ @obesity_threshold.to_i }kg )",
                           align: 'left',
                           style: {
-                            color: '#F59E0B',
+                            color: '#EF4444',
                             fontWeight: 'bold'
                           }
                         },
-                        zIndex: 3
+                        zIndex: 5
                       }
                     ]
                   },
@@ -471,7 +478,7 @@
                 curve: true,
                 colors: ["#3B82F6"],
                 min: (@bmi_data.minimum(:bmi).to_i - 3),
-                max: (@bmi_data.maximum(:bmi).to_i + 3),
+                max: (@bmi_data.maximum(:bmi).to_i + 5),
                 library: {
                   chart: {
                     type: 'spline',
@@ -483,7 +490,7 @@
                   xAxis: {
                     type: 'datetime',
                     title: {
-                      text: 'Data'
+                      text: 'Data do cálculo do IMC'
                     },
                     labels: {
                       rotation: -45,
@@ -495,10 +502,15 @@
                   },
                   yAxis: {
                     title: {
-                      text: 'IMC'
+                      text: 'IMC',
+                      style: {
+                        fontWeight: 'bold',
+                        color: '#5a189a',
+                        fontSize: '20px'
+                      }
                     },
-                    min: (@bmi_data.minimum(:bmi).to_i - 1),
-                    max: (@bmi_data.maximum(:bmi).to_i + 1),
+                    min: (@bmi_data.minimum(:bmi).to_i - 3),
+                    max: (@bmi_data.maximum(:bmi).to_i + 5),
                     tickInterval: 1, # Incremento de 1 em 1
                     gridLineWidth: 1,
                     plotLines: [
@@ -508,7 +520,7 @@
                         dashStyle: 'shortdash',
                         width: 2,
                         label: {
-                          text: 'Abaixo do Peso (18.5)',
+                          text: 'Limite inferior do IMC ideal: (18.5)',
                           align: 'left',
                           style: {
                             color: '#3B82F6',
@@ -523,7 +535,7 @@
                         dashStyle: 'shortdash',
                         width: 2,
                         label: {
-                          text: 'Sobrepeso (25)',
+                          text: 'Limite superior do IMC ideal: (25)',
                           align: 'left',
                           style: {
                             color: '#F59E0B',
@@ -538,7 +550,7 @@
                         dashStyle: 'shortdash',
                         width: 2,
                         label: {
-                          text: 'Obesidade (30)',
+                          text: 'Obesidade: (IMC = 30)',
                           align: 'left',
                           style: {
                             color: '#EF4444',
@@ -608,6 +620,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
           <div class="bg-pink-50 dark:bg-pink-900/20 px-4 py-3 border-b border-pink-100 dark:border-pink-800">
             <h3 class="text-lg font-medium text-pink-800 dark:text-pink-300">Ciclo Menstrual</h3>
+          
           </div>
           <div class="p-4">
             <% if @latest_menstrual %>
