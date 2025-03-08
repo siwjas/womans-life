@@ -1,28 +1,39 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails"
+import "@hotwired/stimulus"
+import "@hotwired/stimulus-loading"
 import "controllers"
+import "chartkick"
+import "Chart.bundle"
+
 
 // Navbar toggle
-document.addEventListener('DOMContentLoaded', function() {
-  const navbarToggle = document.querySelector('[data-collapse-toggle="menu-mobile"]');
-  const navbarMenu = document.getElementById('menu-mobile');
-
-  if (navbarToggle && navbarMenu) {
-    navbarToggle.addEventListener('click', () => {
-      navbarMenu.classList.toggle('hidden');
+document.addEventListener('turbo:load', function() {
+  // Mobile menu
+  const burger = document.querySelector('.navbar-burger');
+  const menu = document.querySelector('.navbar-menu');
+  
+  if (burger) {
+    burger.addEventListener('click', function() {
+      burger.classList.toggle('is-active');
+      menu.classList.toggle('is-active');
     });
   }
 });
 
-// Manipulador de erros global para depuração
-window.addEventListener('error', function(event) {
-  console.error('JavaScript error:', event.error);
-  
-  // Adicionar mais detalhes para erros de módulo
-  if (event.error && event.error.message && event.error.message.includes('Failed to resolve module')) {
-    console.error('Module resolution error details:', {
+// Error reporting
+window.addEventListener("error", function(event) {
+  if (event.error) {
+    console.error({
       message: event.error.message,
       stack: event.error.stack
     });
+  }
+});
+
+// Registrar o plugin
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.Chart && window.ChartAnnotation) {
+    Chart.register(ChartAnnotation);
   }
 });

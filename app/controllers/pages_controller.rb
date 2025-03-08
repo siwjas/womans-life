@@ -11,7 +11,7 @@ class PagesController < ApplicationController
     # Buscar os cálculos mais recentes de cada tipo para o usuário atual
     @latest_pregnancy = current_user.pregnancy_calculators.order(created_at: :desc).first if user_signed_in?
     @latest_menstrual = current_user.menstrual_cycle_calculators.order(created_at: :desc).first if user_signed_in?
-    @latest_bmi = current_user.bmi_calculators.order(created_at: :desc).first if user_signed_in?
+    @latest_bmi       = current_user.bmi_calculators.order(created_at: :desc).first if user_signed_in?
     
     # Logs detalhados
     if user_signed_in?
@@ -45,35 +45,23 @@ class PagesController < ApplicationController
       }
     end
     
-    # Preparar dados para o gráfico de peso
-    if user_signed_in? && @bmi_history.present?
-      # Determinar se estamos em uma requisição mobile (baseado no user agent)
-      is_mobile = request.user_agent =~ /Mobile|Android|iPhone/
-      
-      # Para dispositivos móveis, reduzir a quantidade de pontos de dados
-      data_points = is_mobile ? @bmi_history.last(10) : @bmi_history
-      
-      @weight_chart_data = data_points.map do |record|
-        local_time = record.created_at.in_time_zone('America/Sao_Paulo')
-        {
-          date: local_time.strftime('%d/%m'),
-          weight: record.weight
-        }
-      end
-      
-      # Preparar dados para o gráfico de IMC
-      @bmi_chart_data = data_points.map do |record|
-        local_time = record.created_at.in_time_zone('America/Sao_Paulo')
-        {
-          date: local_time.strftime('%d/%m'),
-          bmi: record.bmi.round(1)
-        }
-      end
+    # Preparar dados para os gráficos de IMC
+    @bmi_data = current_user.bmi_calculators.order(created_at: :asc) if user_signed_in?
+    
+    # Preparar dados para os gráficos de peso
+    @weight_data = current_user.bmi_calculators.order(created_at: :asc) if user_signed_in?
+    
+    # Calcular peso ideal baseado na altura (IMC entre 18.5 e 24.9)
+    if user_signed_in? && current_user.height.present?
+      height_in_meters = current_user.height / 100.0
+      @ideal_weight_min = (18.5 * (height_in_meters**2)).round(1)
+      @ideal_weight_max = (24.9 * (height_in_meters**2)).round(1)
+      @overweight_threshold = (25 * (height_in_meters**2)).round(1)
     end
-
+    
     # Adicionar logs para depuração
     Rails.logger.debug "BMI History Count: #{@bmi_history.size}" if @bmi_history.present?
-    Rails.logger.debug "Weight Chart Data: #{@weight_chart_data.inspect}"
+    Rails.logger.debug "Weight Chart Data: #{@weight_data.inspect}"
   end
 
   def blog

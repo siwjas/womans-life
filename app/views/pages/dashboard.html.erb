@@ -2,9 +2,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6">
     <div class="text-center mb-8">
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Seu Dashboard Personalizado</h1>
-      <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">
-        Bem-vinda, <%= current_user.first_name.capitalize %>! Aqui está um resumo da sua saúde.
-      </p>
+      <p class="mt-2 text-lg text-gray-600 dark:text-gray-300">Acompanhe sua saúde e bem-estar</p>
     </div>
 
     <!-- Próximos Eventos -->
@@ -347,6 +345,198 @@
       </section>
     <% end %>
 
+    <!-- Seção de Gráficos com Toggle -->
+    <section id="charts-section" class="mb-10" data-controller="chart-toggle">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Seu Histórico de Saúde</h2>
+          
+          <!-- Botões de Toggle -->
+          <div class="flex space-x-2">
+            <button data-chart-toggle-target="weightButton" data-action="click->chart-toggle#showWeightChart" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+              Peso
+            </button>
+            <button data-chart-toggle-target="bmiButton" data-action="click->chart-toggle#showBmiChart" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+              IMC
+            </button>
+          </div>
+        </div>
+        
+        <!-- Container dos Gráficos -->
+        <div class="relative">
+          <!-- Gráfico de Peso -->
+          <div data-chart-toggle-target="weightChart" class="h-80">
+            <%= line_chart @weight_data.pluck(:created_at, :weight), 
+                points: true,
+                curve: false,
+                colors: ["#10B981"],
+                min: (@weight_data.minimum(:weight).to_i - 1),
+                max: (@weight_data.maximum(:weight).to_i + 1),
+                library: {
+                  plugins: {
+                    title: {
+                      display: true,
+                      text: 'Histórico de Peso (kg)'
+                    },
+                    legend: {
+                      display: true,
+                      position: 'bottom',
+                      labels: {
+                        usePointStyle: true
+                      }
+                    },
+                    annotation: {
+                      annotations: {
+                        idealWeight: {
+                          type: 'line',
+                          yMin: @ideal_weight_min,
+                          yMax: @ideal_weight_min,
+                          borderColor: '#10B981',
+                          borderWidth: 2,
+                          borderDash: [5, 5],
+                          label: {
+                            content: "Peso Ideal Mínimo (#{@ideal_weight_min}kg)",
+                            enabled: true,
+                            position: 'left',
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)'
+                          }
+                        },
+                        overweight: {
+                          type: 'line',
+                          yMin: @overweight_threshold,
+                          yMax: @overweight_threshold,
+                          borderColor: '#F59E0B',
+                          borderWidth: 2,
+                          borderDash: [5, 5],
+                          label: {
+                            content: "Sobrepeso (#{@overweight_threshold}kg)",
+                            enabled: true,
+                            position: 'left',
+                            backgroundColor: 'rgba(245, 158, 11, 0.7)'
+                          }
+                        }
+                      }
+                    }
+                  },
+                  scales: {
+                    y: {
+                      title: {
+                        display: true,
+                        text: 'Peso (kg)'
+                      },
+                      ticks: {
+                        stepSize: 1 # Incremento de 1 em 1
+                      },
+                      beginAtZero: false
+                    },
+                    x: {
+                      title: {
+                        display: true,
+                        text: 'Data'
+                      },
+                      ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                      }
+                    }
+                  }
+                } %>
+          </div>
+          
+          <!-- Gráfico de IMC -->
+          <div data-chart-toggle-target="bmiChart" class="h-80 hidden">
+            <%= line_chart @bmi_data.pluck(:created_at, :bmi), 
+                min: (@bmi_data.minimum(:bmi).to_i - 1),
+                max: (@bmi_data.maximum(:bmi).to_i + 1),
+                points: true,
+                colors: ["#3B82F6"],
+                library: {
+                  plugins: {
+                    title: {
+                      display: true,
+                      text: 'Índice de Massa Corporal'
+                    },
+                    legend: {
+                      display: true,
+                      position: 'bottom',
+                      labels: {
+                        usePointStyle: true
+                      }
+                    },
+                    annotation: {
+                      annotations: {
+                        underweight: {
+                          type: 'line',
+                          yMin: 18.5,
+                          yMax: 18.5,
+                          borderColor: '#3B82F6',
+                          borderWidth: 2,
+                          borderDash: [5, 5],
+                          label: {
+                            content: 'Abaixo do Peso (18.5)',
+                            enabled: true,
+                            position: 'left',
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)'
+                          }
+                        },
+                        overweight: {
+                          type: 'line',
+                          yMin: 25,
+                          yMax: 25,
+                          borderColor: '#F59E0B',
+                          borderWidth: 2,
+                          borderDash: [5, 5],
+                          label: {
+                            content: 'Sobrepeso (25)',
+                            enabled: true,
+                            position: 'left',
+                            backgroundColor: 'rgba(245, 158, 11, 0.7)'
+                          }
+                        },
+                        obesity: {
+                          type: 'line',
+                          yMin: 30,
+                          yMax: 30,
+                          borderColor: '#EF4444',
+                          borderWidth: 2,
+                          borderDash: [5, 5],
+                          label: {
+                            content: 'Obesidade (30)',
+                            enabled: true,
+                            position: 'left',
+                            backgroundColor: 'rgba(239, 68, 68, 0.7)'
+                          }
+                        }
+                      }
+                    }
+                  },
+                  scales: {
+                    y: {
+                      title: {
+                        display: true,
+                        text: 'IMC'
+                      },
+                      ticks: {
+                        stepSize: 1 # Incremento de 1 em 1
+                      }
+                    },
+                    x: {
+                      title: {
+                        display: true,
+                        text: 'Data'
+                      },
+                      ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
+                      }
+                    }
+                  }
+                } %>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Resumo das Calculadoras -->
     <section class="mb-10">
       <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Seus Cálculos Recentes</h2>
@@ -447,109 +637,6 @@
             <% end %>
           </div>
         </div>
-      </div>
-    </section>
-
-
-    <% if @bmi_history.present? && @bmi_history.size > 1 %>
-      <!-- Gráfico de IMC -->
-      <section class="mb-10">
-        <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Histórico de IMC</h2>
-        
-        <div class="w-full">
-          <!-- Gráfico de IMC -->
-          <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4" data-controller="chart-toggle">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-lg font-medium text-gray-800 dark:text-white">Evolução da Saúde</h3>
-              <div class="flex space-x-2">
-                <button data-chart-toggle-target="bmiButton" 
-                        data-action="click->chart-toggle#showBmi"
-                        class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
-                  IMC
-                </button>
-                <button data-chart-toggle-target="weightButton" 
-                        data-action="click->chart-toggle#showWeight"
-                        class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                  Peso
-                </button>
-              </div>
-            </div>
-            
-            <!-- Gráfico de IMC (gráfico de linha) -->
-            <div data-chart-toggle-target="bmiChart" class="h-64" data-controller="chart" 
-                 data-chart-labels-value="<%= @bmi_history.map { |b| b.created_at.strftime('%d/%m/%Y') }.to_json %>"
-                 data-chart-data-value="<%= @bmi_history.map(&:bmi).to_json %>"
-                 data-chart-categories-value="true">
-              <canvas id="bmiChart"></canvas>
-            </div>
-            
-            <!-- Gráfico de Peso (gráfico de linha) -->
-            <div data-chart-toggle-target="weightChart" class="h-64 hidden" data-controller="weight-chart" 
-                 data-weight-chart-labels-value="<%= @weight_chart_data.present? ? @weight_chart_data.map { |d| d[:date] }.to_json : [].to_json %>"
-                 data-weight-chart-data-value="<%= @weight_chart_data.present? ? @weight_chart_data.map { |d| d[:weight] }.to_json : [].to_json %>"
-                 data-weight-chart-height-value="<%= @bmi_history.first&.height || 0 %>">
-              <canvas id="weightChart"></canvas>
-              <% if @weight_chart_data.blank? || @weight_chart_data.size <= 1 %>
-                <div class="text-center py-4 text-gray-500">
-                  Dados insuficientes para exibir o gráfico de peso/IMC.
-                </div>
-              <% end %>
-            </div>
-            
-            <div class="mt-4 px-2">
-              <div class="grid grid-cols-4 gap-2 text-xs text-center">
-                <div class="bg-blue-100 dark:bg-blue-900/30 p-1 rounded">
-                  <span class="font-medium">Abaixo do peso</span>
-                  <br>IMC < 18.5
-                </div>
-                <div class="bg-green-100 dark:bg-green-900/30 p-1 rounded">
-                  <span class="font-medium">Peso normal</span>
-                  <br>IMC 18.5-24.9
-                </div>
-                <div class="bg-yellow-100 dark:bg-yellow-900/30 p-1 rounded">
-                  <span class="font-medium">Sobrepeso</span>
-                  <br>IMC 25-29.9
-                </div>
-                <div class="bg-red-100 dark:bg-red-900/30 p-1 rounded">
-                  <span class="font-medium">Obesidade</span>
-                  <br>IMC ≥ 30
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    <% end %>
-
-    <!-- Seção do gráfico de peso -->
-    <section class="mb-10">
-      <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Histórico de Peso</h2>
-      
-      <div class="w-full">
-        <!-- Gráfico -->
-        <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-          <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-3">Evolução do Peso</h3>
-          
-          <div class="h-64 md:h-80">
-            <% if @weight_chart_data.present? && @weight_chart_data.size > 1 %>
-              <div 
-                data-controller="simple-weight-chart" 
-                data-simple-weight-chart-data-value="<%= @weight_chart_data.to_json %>"
-                class="w-full h-full"
-              ></div>
-              
-              <div class="mt-2 text-xs text-gray-500 dark:text-gray-400 md:hidden">
-                <p>Dica: Toque nas barras para ver detalhes.</p>
-              </div>
-            <% else %>
-              <div class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-                <p>Dados insuficientes para exibir o gráfico de peso/IMC.</p>
-              </div>
-            <% end %>
-          </div>
-        </div>
-        
-        <!-- Resto do conteúdo permanece o mesmo -->
       </div>
     </section>
 

@@ -61,6 +61,10 @@ group :development do
   gem "web-console"
 end
 
+gem "chartkick"
+
+gem "groupdate"
+
 gem "devise", "~> 4.9"
 
-gem "dockerfile-rails", ">= 1.7", :group => :development
+gem "dockerfile-rails", ">= 1.7", group: :development

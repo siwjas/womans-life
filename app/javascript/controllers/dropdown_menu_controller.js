@@ -6,6 +6,7 @@ export default class extends Controller {
 
   connect() {
     this.close()
+    console.log("Dropdown menu connected")
   }
 
   toggle(){

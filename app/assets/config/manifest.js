@@ -1,0 +1,1 @@
+//= link chartjs-plugin-annotation.min.js 

@@ -1,6 +1,4 @@
 {
-  "dependencies": {
-    "chart.js": "^4.4.8"
-  },
+  "dependencies": {},
   "packageManager": "yarn@1.22.22"
 }
