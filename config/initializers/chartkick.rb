@@ -29,4 +29,4 @@ Chartkick.options = {
       }
     }
   }
-} 
+}

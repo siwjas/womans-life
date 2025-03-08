@@ -370,8 +370,8 @@
                 points: true,
                 curve: true,
                 colors: ["#10B981"],
-                min: (@weight_data.minimum(:weight).to_i - 1),
-                max: (@weight_data.maximum(:weight).to_i + 1),
+                min: (@weight_data.minimum(:weight).to_i - 3),
+                max: (@weight_data.maximum(:weight).to_i + 3),
                 library: {
                   chart: {
                     type: 'spline',
@@ -470,8 +470,8 @@
                 points: true,
                 curve: true,
                 colors: ["#3B82F6"],
-                min: (@bmi_data.minimum(:bmi).to_i - 1),
-                max: (@bmi_data.maximum(:bmi).to_i + 1),
+                min: (@bmi_data.minimum(:bmi).to_i - 3),
+                max: (@bmi_data.maximum(:bmi).to_i + 3),
                 library: {
                   chart: {
                     type: 'spline',

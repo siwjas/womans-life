@@ -63,6 +63,8 @@ end
 
 gem "chartkick"
 
+gem 'highcharts-rails', '~> 6.0', '>= 6.0.3'
+
 gem "groupdate"
 
 gem "devise", "~> 4.9"

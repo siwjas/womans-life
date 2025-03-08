@@ -123,6 +123,8 @@ GEM
       activesupport (>= 6.1)
     groupdate (6.5.1)
       activesupport (>= 7)
+    highcharts-rails (6.0.3)
+      railties (>= 3.1)
     hotwire-spark (0.1.13)
       listen
       rails (>= 7.0.0)
@@ -387,6 +389,7 @@ DEPENDENCIES
   devise (~> 4.9)
   dockerfile-rails (>= 1.7)
   groupdate
+  highcharts-rails (~> 6.0, >= 6.0.3)
   hotwire-spark
   importmap-rails
   jbuilder

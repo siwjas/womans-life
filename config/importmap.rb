@@ -9,7 +9,8 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 # Chartkick
 pin "chartkick", to: "chartkick.js"
 pin "Chart.bundle", to: "Chart.bundle.js"
-pin "highcharts"
+pin "highcharts", to: "https://ga.jspm.io/npm:highcharts@11.0.1/highcharts.js"
+# pin "highcharts" # @12.1.2
 
 # Adicionar o plugin de anotação
 pin "@kurkle/color", to: "@kurkle--color.js" # @0.3.4
