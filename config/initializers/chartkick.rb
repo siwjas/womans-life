@@ -1,7 +1,7 @@
 Chartkick.options = {
   height: "300px",
-  colors: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"],
-  message: {empty: "Sem dados disponíveis"},
+  colors: [ "#3B82F6", "#10B981", "#F59E0B", "#EF4444" ],
+  message: { empty: "Sem dados disponíveis" },
   thousands: ".",
   decimal: ",",
   suffix: "",
@@ -20,7 +20,7 @@ Chartkick.options = {
     plotOptions: {
       series: {
         animation: {
-          duration: 1000
+          duration: 3000
         },
         marker: {
           enabled: true,

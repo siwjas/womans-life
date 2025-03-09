@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+
 // Não importamos o Chart.js, pois ele está disponível globalmente
 
 export default class extends Controller {
@@ -86,5 +87,29 @@ export default class extends Controller {
         }
       }
     })
+  }
+
+  get data() {
+    // Supondo que você tenha um array de objetos com data e peso/IMC
+    return [
+      { name: "Peso", data: this.weightData },
+      { name: "IMC", data: this.bmiData }
+    ]
+  }
+
+  get weightData() {
+    // Exemplo de dados: [{x: Date.parse("2023-10-01"), y: 70}, ...]
+    return JSON.parse(this.element.dataset.weightData).map(entry => ({
+      x: Date.parse(entry.date),
+      y: entry.weight
+    }))
+  }
+
+  get bmiData() {
+    // Exemplo de dados: [{x: Date.parse("2023-10-01"), y: 22}, ...]
+    return JSON.parse(this.element.dataset.bmiData).map(entry => ({
+      x: Date.parse(entry.date),
+      y: entry.bmi
+    }))
   }
 } 

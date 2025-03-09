@@ -385,214 +385,207 @@
         <!-- Container dos Gráficos -->
         <div class="relative">
           <!-- Gráfico de Peso -->
-          <div data-chart-toggle-target="weightChart" class="h-80"
-            <%= line_chart @weight_data.pluck(:created_at, :weight), 
-                points: true,
-                curve: true,
-                colors: ["#10B981"],
-                min: (@weight_data.minimum(:weight).to_i - 7),
-                max: (@weight_data.maximum(:weight).to_i + 10),
-                library: {
-                  chart: {
-                    type: 'spline',
-                    zoomType: 'xy'
-                  },
-                  title: {
-                    text: 'Histórico de Peso (kg)',
-                  },
-                  xAxis: {
-                    type: 'datetime',
-                    title: {
-                      text: 'Data da pesagem'
-                    },
-                    labels: {
-                      rotation: -45,
-                      style: {
-                        fontSize: '12px'
-                      }
-                    },
-                    tickInterval: 24 * 3600 * 1000 # Um dia
-                  },
-                  yAxis: {
-                    title: {
-                      text: 'Peso (kg)',
-                      style: {
-                        fontWeight: 'bold',
-                        color: '#ff6700',
-                        fontSize: '20px'
-                      }
-                    },
-                    min: ((@underweight_threshold.to_i) - 2),
-                    max: ((@obesity_threshold.to_i) + 2),
-                    tickInterval: 1, # Incremento de 1 em 1
-                    gridLineWidth: 1,
-                    plotLines: [
-                      {
-                        value: @ideal_weight_min.to_i,
-                        color: '#ff9f1c',
-                        dashStyle: 'shortdash',
-                        width: 2,
-                        label: {
-                          text: "Peso ideal: ( mínimo #{ @ideal_weight_min.to_i }kg )",
-                          align: 'left',
-                          style: {
-                            color: '#004e98',
-                            fontWeight: 'bold'
-                          }
-                        },
-                        zIndex: 3
-                      },
-                      {
-                        value: @ideal_weight_max.to_i,
-                        color: '#8ac926',
-                        dashStyle: 'shortdash',
-                        width: 2,
-                        label: {
-                          text: "Peso ideal: ( máximo #{ @ideal_weight_max.to_i }kg )",
-                          align: 'left',
-                          style: {
-                            color: '#004e98',
-                            fontWeight: 'bold'
-                          }
-                        },
-                        zIndex: 5
-                      },
-                      {
-                        value: @obesity_threshold.to_i,
-                        color: '#EF4444',
-                        dashStyle: 'shortdash',
-                        width: 2,
-                        label: {
-                          text: "Obesidade ( #{ @obesity_threshold.to_i }kg )",
-                          align: 'left',
-                          style: {
-                            color: '#EF4444',
-                            fontWeight: 'bold'
-                          }
-                        },
-                        zIndex: 5
-                      }
-                    ]
-                  },
-                  tooltip: {
-                    headerFormat: '<b>{point.x:%d/%m/%Y}</b><br>',
-                    pointFormat: 'Peso: {point.y:.1f} kg'
-                  },
-                  plotOptions: {
-                    spline: {
-                      marker: {
-                        enabled: true
-                      },
-                      lineWidth: 3
-                    }
+          <div data-chart-toggle-target="weightChart" class="h-80">
+            <%= line_chart @weight_data, 
+              adapter: "highcharts",
+              curve: true,
+              colors: ["#10B981"],
+              min: (@weight_data.map { |data| data[1] }.min.to_i - 5),
+              max: (@weight_data.map { |data| data[1] }.max.to_i + 5),
+              library: {
+                chart: {
+                  backgroundColor: '#ffffff',
+                  borderRadius: 8,
+                  style: {
+                    fontFamily: 'Inter, sans-serif'
                   }
-                } 
-            %>
+                },
+                title: {
+                  text: 'Histórico de Peso',
+                  style: {
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    color: '#374151',
+                  }
+                },
+                xAxis: {
+                  type: 'datetime',
+                  title: {
+                    text: 'Data da pesagem',
+                    style: {
+                      fontWeight: 'bold'
+                    }
+                  },
+                  labels: {
+                    rotation: -45,
+                    format: '{value:%d/%m}',
+                    style: {
+                      color: '#6B7280'
+                    }
+                  },
+                  tickInterval: 24 * 3600 * 1000, # Um dia
+                  minTickInterval: 24 * 3600 * 1000, # Mínimo de um dia
+                  minRange: 7 * 24 * 3600 * 1000, # Mínimo de uma semana
+                  startOfWeek: 0 # Domingo como início da semana
+                },
+                yAxis: {
+                  title: {
+                    text: 'Peso (kg)',
+                    style: {
+                      fontWeight: 'bold',
+                      color: '#6B7280'
+                    }
+                  },
+                  labels: {
+                    style: {
+                      color: '#6B7280'
+                    }
+                  },
+                  min: (@weight_data.map { |data| data[1] }.min.to_i - 5),
+                  max: (@weight_data.map { |data| data[1] }.max.to_i + 7),
+                  tickInterval: 1, # Incremento de 1 em 1
+                  gridLineWidth: 1,
+                  plotBands: [
+                    {
+                      from: @ideal_weight_min,
+                      to: @ideal_weight_max,
+                      color: 'rgba(16, 185, 129, 0.1)',
+                      label: {
+                        text: 'Faixa de Peso Ideal',
+                        style: {
+                          fontWeight: 'bold',
+                          color: '#0fa3b1',
+                        }
+                      }
+                    }
+                  ]
+                },
+                tooltip: {
+                  xDateFormat: '%d/%m/%Y',
+                  valueSuffix: ' kg'
+                },
+                legend: {
+                  enabled: false
+                },
+                plotOptions: {
+                  series: {
+                    marker: {
+                      enabled: true,
+                      radius: 4
+                    },
+                    lineWidth: 2
+                  }
+                }
+              } %>
           </div>
           
           <!-- Gráfico de IMC -->
           <div data-chart-toggle-target="bmiChart" class="h-80 hidden">
-            <%= line_chart @bmi_data.pluck(:created_at, :bmi), 
-                points: true,
-                curve: true,
-                colors: ["#3B82F6"],
-                min: (@bmi_data.minimum(:bmi).to_i - 3),
-                max: (@bmi_data.maximum(:bmi).to_i + 5),
-                library: {
-                  chart: {
-                    type: 'spline',
-                    zoomType: 'xy'
-                  },
-                  title: {
-                    text: 'Índice de Massa Corporal'
-                  },
-                  xAxis: {
-                    type: 'datetime',
-                    title: {
-                      text: 'Data do cálculo do IMC'
-                    },
-                    labels: {
-                      rotation: -45,
-                      style: {
-                        fontSize: '12px'
-                      }
-                    },
-                    tickInterval: 24 * 3600 * 1000 # Um dia
-                  },
-                  yAxis: {
-                    title: {
-                      text: 'IMC',
-                      style: {
-                        fontWeight: 'bold',
-                        color: '#5a189a',
-                        fontSize: '20px'
-                      }
-                    },
-                    min: (@bmi_data.minimum(:bmi).to_i - 3),
-                    max: (@bmi_data.maximum(:bmi).to_i + 5),
-                    tickInterval: 1, # Incremento de 1 em 1
-                    gridLineWidth: 1,
-                    plotLines: [
-                      {
-                        value: 18.5,
-                        color: '#3B82F6',
-                        dashStyle: 'shortdash',
-                        width: 2,
-                        label: {
-                          text: 'Limite inferior do IMC ideal: (18.5)',
-                          align: 'left',
-                          style: {
-                            color: '#3B82F6',
-                            fontWeight: 'bold'
-                          }
-                        },
-                        zIndex: 3
-                      },
-                      {
-                        value: 25,
-                        color: '#F59E0B',
-                        dashStyle: 'shortdash',
-                        width: 2,
-                        label: {
-                          text: 'Limite superior do IMC ideal: (25)',
-                          align: 'left',
-                          style: {
-                            color: '#F59E0B',
-                            fontWeight: 'bold'
-                          }
-                        },
-                        zIndex: 3
-                      },
-                      {
-                        value: 30,
-                        color: '#EF4444',
-                        dashStyle: 'shortdash',
-                        width: 2,
-                        label: {
-                          text: 'Obesidade: (IMC = 30)',
-                          align: 'left',
-                          style: {
-                            color: '#EF4444',
-                            fontWeight: 'bold'
-                          }
-                        },
-                        zIndex: 3
-                      }
-                    ]
-                  },
-                  tooltip: {
-                    headerFormat: '<b>{point.x:%d/%m/%Y}</b><br>',
-                    pointFormat: 'IMC: {point.y:.1f}'
-                  },
-                  plotOptions: {
-                    spline: {
-                      marker: {
-                        enabled: true
-                      },
-                      lineWidth: 3
-                    }
+            <%= line_chart @bmi_data, 
+              adapter: "highcharts",
+              curve: true,
+              colors: ["#3B82F6"],
+              min: (@bmi_data.map { |data| data[1] }.min.to_i - 5),
+              max: (@bmi_data.map { |data| data[1] }.max.to_i + 5),
+              library: {
+                chart: {
+                  backgroundColor: '#ffffff',
+                  borderRadius: 8,
+                  style: {
+                    fontFamily: 'Inter, sans-serif'
                   }
-                } %>
+                },
+                title: {
+                  text: 'Histórico de IMC',
+                  style: {
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    color: '#374151'
+                  }
+                },
+                xAxis: {
+                  type: 'datetime',
+                  labels: {
+                  rotation: -45,
+                    format: '{value:%d/%m}',
+                    style: {
+                      color: '#6B7280'
+                    }
+                  },
+                  tickInterval: 24 * 3600 * 1000, # Um dia
+                  minTickInterval: 24 * 3600 * 1000, # Mínimo de um dia
+                  minRange: 7 * 24 * 3600 * 1000, # Mínimo de uma semana
+                  startOfWeek: 0 # Domingo como início da semana
+                },
+                yAxis: {
+                  title: {
+                    text: 'IMC',
+                    style: {
+                      color: '#6B7280'
+                    }
+                  },
+                  labels: {
+                    style: {
+                      color: '#6B7280'
+                    }
+                  },
+                  min: (@bmi_data.map { |data| data[1] }.min.to_i - 5),
+                  max: (@bmi_data.map { |data| data[1] }.max.to_i + 5),
+                  tickInterval: 1, # Incremento de 1 em 1
+                  gridLineWidth: 1,
+                  plotBands: [
+                    {
+                      from: 18.5,
+                      to: 24.9,
+                      color: 'rgba(59, 130, 246, 0.1)',
+                      label: {
+                        text: 'IMC Normal',
+                        style: {
+                          color: '#3B82F6'
+                        }
+                      }
+                    },
+                    {
+                      from: 25,
+                      to: 29.9,
+                      color: 'rgba(245, 158, 11, 0.1)',
+                      label: {
+                        text: 'Sobrepeso',
+                        style: {
+                          color: '#F59E0B'
+                        }
+                      }
+                    },
+                    {
+                      from: 30,
+                      to: 34.9,
+                      color: 'rgba(239, 68, 68, 0.1)',
+                      label: {
+                        text: 'Obesidade I',
+                        style: {
+                          color: '#EF4444'
+                        }
+                      }
+                    }
+                  ]
+                },
+                tooltip: {
+                  xDateFormat: '%d/%m/%Y',
+                  valueSuffix: ''
+                },
+                legend: {
+                  enabled: false
+                },
+                plotOptions: {
+                  series: {
+                    marker: {
+                      enabled: true,
+                      radius: 4
+                    },
+                    lineWidth: 2
+                  }
+                }
+              } %>
           </div>
         </div>
       </div>
