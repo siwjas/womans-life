@@ -27,7 +27,7 @@ export default class extends Controller {
         // Comparar as strings de data diretamente para evitar problemas de fuso horário
         if (dateAttr === todayString) {
           console.log("Highlighting day:", dateAttr)
-          dayEl.classList.add('ring-2', 'ring-blue-500')
+          dayEl.classList.add('ring-2', 'ring-blue-500', 'dark:bg-blue-500', 'dark:text-white', 'dark:ring-lime-400')
         } else {
           dayEl.classList.remove('ring-2', 'ring-blue-500')
         }

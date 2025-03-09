@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" charset="utf-8">
+<html lang="pt-BR" charset="utf-8" data-controller="theme">
   <head>
     <title><%= content_for(:title) || "Vida De Mulher" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -22,24 +22,16 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "chartkick", "Chart.bundle" %>
     <%= javascript_include_tag "https://code.highcharts.com/highcharts.js" %>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <%= javascript_importmap_tags %>
-    <!-- Script para inicializar o tema antes do carregamento da página -->
-    <script>
-      // Verificar tema salvo ou preferência do sistema
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    </script>
   </head>
 
   <body class="bg-gray-50 dark:bg-gray-900">
-    <%= render 'shared/notices' %>
     <%= render "shared/nav_bar" %>
+    <%= render 'shared/notices' %>
 
     <main class="container flex flex-col justify-start space-y-12 mx-auto px-4">
       <%= yield %>
@@ -158,5 +150,10 @@
         </div>
       </div>
     </footer>
+
+    <button data-action="click->theme#toggle">
+      <span data-theme-target="lightIcon">🌞</span>
+      <span data-theme-target="darkIcon" class="hidden">🌜</span>
+    </button>
   </body>
 </html>

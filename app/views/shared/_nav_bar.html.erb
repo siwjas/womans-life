@@ -68,7 +68,7 @@
                 <%= link_to link[:page], link[:href], 
                     class: [ "text-start rounded-md px-3 py-2 font-medium text-lg drop-shadow-md text-gray-900 dark:text-white transition-all duration-300",
                     { "text-white bg-pink-400": current_page?(link[:href]) },
-                    { "hover:bg-pink-200 dark:hover:bg-gray-700/50 hover:text-gray-900": !current_page?(link[:href]) } ], 
+                    { "hover:bg-pink-200 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-gray-100": !current_page?(link[:href]) } ], 
                     aria: { current: aria(link[:href])} %>
                 <% end %>
             <% end %>

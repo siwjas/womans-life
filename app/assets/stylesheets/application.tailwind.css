@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
 
 @layer components {
@@ -11,6 +13,7 @@
 }
 
 */
+
 
 /* Estilos para o calendário menstrual */
 .fc-event {
@@ -76,4 +79,38 @@
   .weight-chart-label {
     font-size: 0.6rem;
   }
+}
+
+/* Estilos para o mini-calendário */
+.mini-calendar {
+  @apply bg-white text-gray-900;
+}
+
+.dark .mini-calendar {
+  @apply bg-gray-800 text-gray-100;
+}
+
+.mini-calendar .day {
+  @apply border border-gray-300;
+}
+
+.dark .mini-calendar .day {
+  @apply border border-gray-600;
+}
+
+/* Estilos para o simple_calendar */
+.simple-calendar {
+  @apply bg-white text-gray-900;
+}
+
+.dark .simple-calendar {
+  @apply bg-gray-800 text-gray-100;
+}
+
+.simple-calendar .calendar-day {
+  @apply border border-gray-300;
+}
+
+.dark .simple-calendar .calendar-day {
+  @apply border border-gray-600;
 }

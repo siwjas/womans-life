@@ -35,9 +35,67 @@ window.addEventListener("error", function(event) {
   }
 });
 
-// Registrar o plugin
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.Chart && window.ChartAnnotation) {
-    Chart.register(ChartAnnotation);
-  }
-});
+// Configuração do Chartkick
+// document.addEventListener("turbo:load", function() {
+//   if (typeof Chartkick !== 'undefined') {
+//     Chartkick.options = {
+//       colors: ["#2ecc71", "#3498db", "#e74c3c", "#f1c40f", "#9b59b6"],
+//       library: {
+//         chart: {
+//           backgroundColor: '#2c3e50',
+//           style: {
+//             fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+//             color: '#ecf0f1'
+//           }
+//         },
+//         title: {
+//           style: {
+//             color: '#ecf0f1'
+//           }
+//         },
+//         legend: {
+//           itemStyle: {
+//             color: '#ecf0f1'
+//           },
+//           itemHoverStyle: {
+//             color: '#bdc3c7'
+//           }
+//         },
+//         xAxis: {
+//           labels: {
+//             style: {
+//               color: '#ecf0f1'
+//             }
+//           },
+//           lineColor: '#7f8c8d',
+//           gridLineColor: '#34495e'
+//         },
+//         yAxis: {
+//           labels: {
+//             style: {
+//               color: '#ecf0f1'
+//             }
+//           },
+//           lineColor: '#7f8c8d',
+//           gridLineColor: '#34495e',
+//           title: {
+//             style: {
+//               color: '#ecf0f1'
+//             }
+//           }
+//         },
+//         plotOptions: {
+//           series: {
+//             shadow: false
+//           }
+//         },
+//         tooltip: {
+//           backgroundColor: 'rgba(44, 62, 80, 0.9)',
+//           style: {
+//             color: '#ecf0f1'
+//           }
+//         }
+//       }
+//     };
+//   }
+// }); 

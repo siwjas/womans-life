@@ -2,20 +2,17 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="theme"
 export default class extends Controller {
-  static targets = ["toggle", "lightIcon", "darkIcon"]
+  static targets = ["lightIcon", "darkIcon"]
   
   connect() {
-    this.updateTheme()
-    
-    // Verificar se há uma preferência de tema salva
-    const savedTheme = localStorage.getItem('theme')
-    if (savedTheme) {
-      this.applyTheme(savedTheme)
-    } else {
-      // Verificar preferência do sistema
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      this.applyTheme(prefersDark ? 'dark' : 'light')
-    }
+    console.log("Theme controller connected")
+    // Aplicar tema com base no localStorage ou preferência do sistema
+    document.documentElement.classList.toggle(
+      "dark",
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    );
+    this.updateIcons();
   }
   
   toggle() {
@@ -26,23 +23,22 @@ export default class extends Controller {
   applyTheme(theme) {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark')
+      console.log("Dark theme applied")
     } else {
       document.documentElement.classList.remove('dark')
+      console.log("Light theme applied")
     }
     
     // Salvar preferência
     localStorage.setItem('theme', theme)
     
     // Atualizar aparência do botão
-    this.updateTheme()
+    this.updateIcons()
   }
   
-  updateTheme() {
+  updateIcons() {
     const isDark = document.documentElement.classList.contains('dark')
-    
-    if (this.hasLightIconTarget && this.hasDarkIconTarget) {
-      this.lightIconTarget.classList.toggle('hidden', isDark)
-      this.darkIconTarget.classList.toggle('hidden', !isDark)
-    }
+    this.lightIconTarget.classList.toggle('hidden', isDark)
+    this.darkIconTarget.classList.toggle('hidden', !isDark)
   }
 }

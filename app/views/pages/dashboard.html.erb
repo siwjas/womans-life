@@ -143,24 +143,39 @@
                 <div class="p-5">
                   <div class="flex justify-between items-start">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Próximo Ciclo Menstrual</h3>
-                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-pink-100 text-pink-800">
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-pink-100 text-pink-800 dark:bg-pink-800 dark:text-pink-100">
                       Em <%= event[:days_away] %> dias
                     </span>
                   </div>
                   
-                  <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                  <p class="inline-flex items-center gap-2 mt-2 text-sm text-gray-600 dark:text-gray-300">
+                  <svg width="16" height="16" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      stroke-width="2" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round" 
+                      class="lucide lucide-calendar-days text-pink-700 dark:text-pink-300">
+                        <path d="M8 2v4"/><path d="M16 2v4"/>
+                        <rect width="18" height="18" x="3" y="4" rx="2"/>
+                        <path d="M3 10h18"/><path d="M8 14h.01"/>
+                        <path d="M12 14h.01"/><path d="M16 14h.01"/>
+                        <path d="M8 18h.01"/><path d="M12 18h.01"/>
+                        <path d="M16 18h.01"/>
+                    </svg>
                     Data prevista: <%= event[:date].strftime("%d/%m/%Y") %>
                   </p>
                   
                   <!-- Calendário simplificado em vez do mini-calendário -->
-                  <%= render 'shared/simple_calendar', date: event[:date], bg_color: 'bg-pink-50' do |date| %>
+                  <%= render 'shared/simple_calendar', date: event[:date], bg_color: 'bg-pink-50 dark:bg-gray-900' do |date| %>
                     <% is_period_day = (date >= event[:date] && date <= event[:date] + 5.days) %>
-                    <% is_period_day ? 'bg-pink-500 text-white' : '' %>
+                    <% is_period_day ? 'bg-pink-500 text-white dark:bg-pink-300 dark:text-gray-900' : '' %>
                   <% end %>
                 </div>
               </div>
             <% elsif event[:type] == 'fertility' && @latest_menstrual %>
-              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 border-green-500">
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border-l-4 border-green-500 dark:border-lime-300">
                 <div class="p-5">
                   <div class="flex justify-between items-start">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Período Fértil</h3>
@@ -174,7 +189,9 @@
                   </p>
                   
                   <!-- Calendário simplificado em vez do mini-calendário -->
-                  <%= render 'shared/simple_calendar', date: event[:date], bg_color: 'bg-green-50' do |date| %>
+                  <%= render 'shared/simple_calendar', date: event[:date], 
+                      bg_color: 'text-gray-800 dark:text-gray100 bg-green-50 dark:bg-gray-900' do |date| %>
+
                     <% is_fertile_day = (date >= event[:date] && date <= event[:end_date]) %>
                     <% is_ovulation_day = (date == event[:date] + 3.days) %>
                     <% 
@@ -206,7 +223,7 @@
                     </div>
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                                 <%= event[:status] == 'current' ? 'bg-purple-100 text-purple-800' :
-                                   event[:days_away] < 0 ? 'bg-gray-100 text-gray-800' :
+                                   event[:days_away] < 0  ? 'bg-gray-100 text-gray-800' :
                                    event[:days_away] == 0 ? 'bg-red-100 text-red-800' :
                                    event[:days_away] <= 3 ? 'bg-red-100 text-red-800' :
                                    event[:days_away] <= 7 ? 'bg-yellow-100 text-yellow-800' :
@@ -290,7 +307,8 @@
               <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Visualização do Ciclo</h3>
               
               <!-- Calendário simplificado para o ciclo menstrual -->
-              <%= render 'shared/simple_calendar', date: @latest_menstrual.next_period_date, bg_color: 'bg-pink-50' do |date| %>
+              <%= render 'shared/simple_calendar', date: @latest_menstrual.next_period_date, 
+                  bg_color: 'text-gray-800 dark:text-gray100 bg-green-50 dark:bg-gray-900' do |date| %>
                 <% 
                   # Verificar se é um dia de período menstrual
                   is_last_period = (date >= @latest_menstrual.last_period_date && 
@@ -367,8 +385,8 @@
         <!-- Container dos Gráficos -->
         <div class="relative">
           <!-- Gráfico de Peso -->
-          <div data-chart-toggle-target="weightChart" class="h-80">
-            <%= line_chart @weight_data.pluck(:created_at, :weight), download: true, 
+          <div data-chart-toggle-target="weightChart" class="h-80
+            <%= line_chart @weight_data.pluck(:created_at, :weight), 
                 points: true,
                 curve: true,
                 colors: ["#10B981"],
