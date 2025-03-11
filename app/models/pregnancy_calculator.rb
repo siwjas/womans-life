@@ -25,4 +25,4 @@ class PregnancyCalculator < ApplicationRecord
     return 2 if weeks < 27
     3
   end
-end 
+end

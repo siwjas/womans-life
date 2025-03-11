@@ -63,7 +63,7 @@ end
 
 gem "chartkick"
 
-gem 'highcharts-rails', '~> 6.0', '>= 6.0.3'
+gem "highcharts-rails", "~> 6.0", ">= 6.0.3"
 
 gem "groupdate"
 

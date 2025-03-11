@@ -46,14 +46,14 @@ weights = 15.times.map { rand(49.0..61.5).round(1) }
 15.times do |i|
   date = (15 - i).days.ago
   weight = weights[i]
-  
+
   diana.bmi_calculators.create!(
     weight: weight,
     height: diana.height,
     created_at: date,
     updated_at: date
   )
-  
+
   puts "  Criado registro de IMC para #{date.strftime('%d/%m/%Y')}: #{weight} kg"
 end
 

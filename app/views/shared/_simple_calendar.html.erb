@@ -1,4 +1,7 @@
-<div class="mt-4 p-4 <%= bg_color %> rounded-lg simple-calendar" data-controller="simple-calendar" data-simple-calendar-date-value="<%= date.to_s %>">
+<div class="mt-4 p-4 rounded-lg simple-calendar text-gray-800 dark:text-gray100 bg-pink-300 dark:bg-gray-900" 
+     data-controller="simple-calendar" 
+     data-simple-calendar-date-value="<%= date.to_s %>" >
+
   <div class="text-center font-semibold mb-2 text-gray-800 dark:text-gray-100"><%= l(date, format: '%B %Y') %></div>
   <div class="grid grid-cols-7 gap-1 text-center dark:text-gray-100">
     <% ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].each do |day| %>
@@ -18,7 +21,7 @@
       
       <div class="calendar-day h-8 flex items-center justify-center text-xs rounded-full
         <%= is_special_day || '' %>"
-        data-date="<%= current_date.strftime('%Y-%m-%d') %>">
+        data-date="<%= current_date.strftime('%d-%m-%Y') %>">
         <%= day %>
       </div>
     <% end %>

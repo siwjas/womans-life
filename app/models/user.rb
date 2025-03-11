@@ -22,4 +22,9 @@ class User < ApplicationRecord
   def full_name
     "#{first_name} #{last_name}"
   end
+
+  # Método para verificar se o tema escuro está ativo
+  def dark_mode?
+    dark_mode || false
+  end
 end

@@ -22,12 +22,12 @@ class MenstrualCycleCalculator < ApplicationRecord
   def calculate_next_period
     self.next_period_date = last_period_date + cycle_length.days
   end
-  
+
   # Método para calcular os próximos 3 ciclos
   def next_cycles(count = 3)
     cycles = []
     current_date = next_period_date
-    
+
     count.times do
       cycles << {
         period_start: current_date,
@@ -36,15 +36,15 @@ class MenstrualCycleCalculator < ApplicationRecord
         fertility_end: current_date + (cycle_length - 11).days,
         ovulation: current_date + (cycle_length - 14).days
       }
-      
+
       current_date = current_date + cycle_length.days
     end
-    
+
     cycles
   end
-  
+
   private
-  
+
   def set_default_period_duration
     self.period_duration = 5 # Valor padrão de 5 dias
   end

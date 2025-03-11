@@ -4,7 +4,7 @@ class MenstrualCycleCalculatorsController < ApplicationController
 
   def index
     @latest_menstrual_calculation = current_user.menstrual_cycle_calculators.order(created_at: :desc).first
-    
+
     # Buscar histórico de ciclos para exibir no calendário
     @menstrual_history = current_user.menstrual_cycle_calculators.order(created_at: :desc).limit(6)
   end

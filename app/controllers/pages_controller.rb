@@ -47,12 +47,12 @@ class PagesController < ApplicationController
 
     # Preparar dados para os gráficos de IMC
     @bmi_data = current_user.bmi_calculators.order(created_at: :asc).map do |calculator|
-      [calculator.created_at.to_i * 1000, calculator.bmi]
+      [ calculator.created_at.to_i * 1000, calculator.bmi ]
     end if user_signed_in?
 
     # Preparar dados para os gráficos de peso
     @weight_data = current_user.bmi_calculators.order(created_at: :asc).map do |calculator|
-      [calculator.created_at.to_i * 1000, calculator.weight]
+      [ calculator.created_at.to_i * 1000, calculator.weight ]
     end if user_signed_in?
 
     # Calcular peso ideal baseado na altura (IMC entre 18.5 e 24.9)
@@ -75,6 +75,12 @@ class PagesController < ApplicationController
 
     # Adicione logs para verificar se há registros
     Rails.logger.debug "BmiCalculator count: #{current_user.bmi_calculators.count}"
+
+    # Definir cores para os gráficos
+    @chart_bg_color = "#ffffff"
+    @chart_text_color = "#374151"
+    @chart_grid_color = "rgba(200, 200, 200, 0.2)"
+    @chart_plot_band_color = "rgba(16, 185, 129, 0.1)"
   end
 
   def blog

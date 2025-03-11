@@ -9,7 +9,7 @@ module ApplicationHelper
         { page: "Tempo de Gestação", href: pregnancy_calculators_path },
         { page: "Ciclo Menstrual", href: menstrual_cycle_calculators_path },
         { page: "Peso Ideal", href: bmi_calculators_path }
-      ]}
+      ] }
     ]
   end
 

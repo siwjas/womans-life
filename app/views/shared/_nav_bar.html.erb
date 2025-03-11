@@ -3,7 +3,8 @@
     <div class="relative flex h-20 items-center justify-between">
       <div class="absolute inset-y-0 left-0 flex items-center lg:hidden">
         <!-- Mobile menu button-->
-        <button data-action="click->mobile-menu#toggle" type="button" class="relative bg-pink-300 inline-flex items-center justify-center rounded-md p-3 text-gray-700 hover:bg-pink-600 
+        <button data-action="click->mobile-menu#toggle keydown.esc->mobile-menu#close resize@window->mobile-menu#close"
+                type="button" class="relative bg-pink-300 inline-flex items-center justify-center rounded-md p-3 text-gray-700 hover:bg-pink-600 
           hover:text-white focus:ring-2 focus:ring-pink-600 focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
           <span class="absolute -inset-0.5"></span>
           <span class="sr-only">Open main menu</span>
@@ -28,7 +29,7 @@
       <div class="flex flex-1 items-center justify-center lg:items-stretch lg:justify-start">
         <div class="flex shrink-0 items-center">
           <%= link_to root_path, class: "flex items-center space-x-3 hover:text-pink-900 transition-all" do %>
-    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Vida de Mulher</span>
+          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Vida de Mulher</span>
           <% end %>
         </div>
         <div class="hidden lg:ml-6 lg:block">
@@ -57,7 +58,7 @@
                       <%= link_to drop_link[:href], class: "group text-start block px-5 py-3 text-sm text-gray-700 dark:text-white hover:bg-pink-200 dark:hover:bg-gray-700/50 dark:hover:text-gray-100 transition-all duration-300" do %>
                         
                         <div class="flex items-center gap-2">
-                         <%= drop_link[:page] %> <span class="group-hover:text-green-500 group-hover:rotate-0"><%= nav_icon %></span>
+                         <%= drop_link[:page] %> <span class="group-hover:text-green-500 group-hover:rotate-10"><%= nav_icon %></span>
                         </div>
                       <% end %>
                     <% end %>
@@ -82,7 +83,7 @@
         <div data-controller="dropdown-menu" class="relative ml-3">
           <div>
             <button data-dropdown-menu-target="button"
-              data-action="click->dropdown-menu#toggle click@window->dropdown-menu#hide keydown.esc->dropdown-menus#close"
+              data-action="click->dropdown-menu#toggle click@window->dropdown-menu#close keydown.esc->dropdown-menus#close"
               type="button" class="relative flex ring-pink-700 ring rounded-full bg-pink-500 text-sm hover:ring-offset-2 hover:ring-pink-700 
               focus:ring-2 focus:ring-pink-700 focus:ring-offset-2 focus:ring-offset-pink-700 focus:outline-hidden" 
               id="user-menu-button" aria-expanded="false" aria-haspopup="true">
@@ -181,48 +182,7 @@
                 px-4 py-2 md:px-5 dark:bg-pink-600 dark:hover:bg-pink-700 focus:outline-none dark:focus:ring-pink-800" %>
           </div>
         <% end %>
-        <!-- Adicionar o botão de tema dentro da barra de navegação, geralmente próximo aos outros botões/links -->
-        <div data-controller="theme" class="ml-3">
-          <button 
-            data-action="click->theme#toggle"
-            data-theme-target="toggle"
-            class="p-2 rounded-full text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-800"
-            aria-label="Alternar tema"
-          >
-            <!-- Ícone para o tema claro (sol) -->
-            <svg 
-              data-theme-target="lightIcon" 
-              xmlns="http://www.w3.org/2000/svg" 
-              class="h-6 w-6" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path 
-                stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="2" 
-                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" 
-              />
-            </svg>
-            
-            <!-- Ícone para o tema escuro (lua) -->
-            <svg 
-              data-theme-target="darkIcon" 
-              xmlns="http://www.w3.org/2000/svg" 
-              class="h-6 w-6 hidden" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path 
-                stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="2" 
-                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" 
-              />
-    </svg>
-  </button>
+        <!-- Adicionar o botão de tema dentro da barra de navegação -->        
         </div>
       </div>
     </div>
@@ -230,14 +190,66 @@
 
   <!-- Mobile menu, show/hide based on menu state. -->
   <div data-mobile-menu-target="mobileMenu" class="hidden origin-top transition-opacity duration-300" id="mobile-menu">
-    <div class="space-y-1 px-2 pt-2 pb-3">
+    <div class="space-y-1 px-2 pt-2 pb-3" data- >
       <!-- Current: "text-white bg-pink-700", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-      <% nav_items.each do |link| %>              
-        <%= link_to link[:page], link[:href], class: [ "block rounded-md px-3 py-2 font-medium text-lg drop-shadow-md text-gray-900 dark:text-white
+      <% nav_items.each do |link| %> 
+        <% if link[:dropdown] %>
+          <!-- Dropdown menu for Calculators -->
+          <div data-controller="dropdown" class="relative">
+            <button data-action="click->dropdown#toggle" type="button" 
+                    class="group flex w-full items-center gap-2 rounded-md px-3 py-2 font-medium text-lg drop-shadow-md text-gray-900 
+                    dark:text-white hover:bg-pink-400 dark:hover:bg-gray-700/50 hover:text-white transition-all duration-300" 
+                    id="menu-button" 
+                    aria-expanded="true" 
+                    aria-haspopup="true">
+
+              <svg width="20" height="20" 
+                   viewBox="0 0 24 24" 
+                   fill="none" 
+                   stroke="currentColor" 
+                   stroke-width="2" 
+                   stroke-linecap="round" 
+                   stroke-linejoin="round" 
+                   class="lucide lucide-calculator text-pink-600">
+                   <rect width="16" height="20" x="4" y="2" rx="2"/>
+                   <line x1="8" x2="16" y1="6" y2="6"/>
+                   <line x1="16" x2="16" y1="14" y2="18"/>
+                   <path d="M16 10h.01"/><path d="M12 10h.01"/>
+                   <path d="M8 10h.01"/><path d="M12 14h.01"/>
+                   <path d="M8 14h.01"/><path d="M12 18h.01"/>
+                   <path d="M8 18h.01"/>
+              </svg>
+              <%= link[:page] %>
+              <svg class="-mr-1 size-5 text-gray-800 group-hover:text-gray-100 dark:text-gray-100" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+              </svg>
+            </button>
+
+            <div data-dropdown-target="menu"
+                 data-action="click@window->dropdown#hide keydown.esc->dropdown#hide resize@window->dropdown#close"
+                 class="hidden absolute overflow-hidden z-10 mt-2 w-56 rounded-md bg-pink-50 dark:bg-gray-800
+                  dark:border dark:border-gray-700 shadow-lg ring-1 ring-black ring-opacity-10">
+              <% link[:dropdown].each do |drop_link| %>
+                <%= link_to drop_link[:href], 
+                    class: "group text-start block px-5 py-3 text-sm text-gray-700 dark:text-white hover:bg-pink-200 
+                    dark:hover:bg-gray-700/50 dark:hover:text-gray-100 transition-all duration-300" do %>
+                  
+                  <div class="flex items-center gap-2">
+                    <%= drop_link[:page] %> <span class="group-hover:text-green-500 group-hover:rotate-10"><%= nav_icon %></span>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <% else %>
+          <!-- Regular link -->
+
+          <%= link_to link[:page], link[:href], class: [ "block rounded-md px-3 py-2 font-medium text-lg drop-shadow-md text-gray-900 dark:text-white
             transition-all duration-300",
             { "text-white bg-pink-700": current_page?(link[:href]) },
             { "hover:bg-pink-400 dark:hover:bg-gray-700/50 hover:text-white": !current_page?(link[:href]) } ], 
             aria: { current: aria(link[:href])} %>
+        <% end %>
       <% end %>
   </div>
   </div>

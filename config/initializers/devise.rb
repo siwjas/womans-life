@@ -24,11 +24,11 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  
+
   # Verificar se estamos no ambiente de build do Docker
-  if ENV['RAILS_ENV'] == 'production' && ENV['DOCKER_BUILD'] == 'true'
+  if ENV["RAILS_ENV"] == "production" && ENV["DOCKER_BUILD"] == "true"
     # Durante o build, use um valor padrão
-    config.mailer_sender = 'placeholder@example.com'
+    config.mailer_sender = "placeholder@example.com"
   else
     # Em tempo de execução, use o valor real
     config.mailer_sender = "no-reply@vidademulher.com"
@@ -316,5 +316,4 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
-
 end
