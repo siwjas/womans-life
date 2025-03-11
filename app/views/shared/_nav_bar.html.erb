@@ -83,7 +83,7 @@
         <div data-controller="dropdown-menu" class="relative ml-3">
           <div>
             <button data-dropdown-menu-target="button"
-              data-action="click->dropdown-menu#toggle click@window->dropdown-menu#close keydown.esc->dropdown-menus#close"
+              data-action="click->dropdown-menu#toggle click@window->dropdown-menu#hide keydown.esc->dropdown-menus#hide"
               type="button" class="relative flex ring-pink-700 ring rounded-full bg-pink-500 text-sm hover:ring-offset-2 hover:ring-pink-700 
               focus:ring-2 focus:ring-pink-700 focus:ring-offset-2 focus:ring-offset-pink-700 focus:outline-hidden" 
               id="user-menu-button" aria-expanded="false" aria-haspopup="true">
@@ -118,7 +118,7 @@
 
               <div class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-800 truncate">
                 <svg class="w-4 h-4" 
-                  aria-hidden="true" 
+                  aria-hidden="true" hide
                   width="24" 
                   height="24" 
                   fill="none" 
@@ -226,7 +226,7 @@
             </button>
 
             <div data-dropdown-target="menu"
-                 data-action="click@window->dropdown#hide keydown.esc->dropdown#hide resize@window->dropdown#close"
+                 data-action="click@window->dropdown#close keydown.esc->dropdown#close resize@window->dropdown#close"
                  class="hidden absolute overflow-hidden z-10 mt-2 w-56 rounded-md bg-pink-50 dark:bg-gray-800
                   dark:border dark:border-gray-700 shadow-lg ring-1 ring-black ring-opacity-10">
               <% link[:dropdown].each do |drop_link| %>

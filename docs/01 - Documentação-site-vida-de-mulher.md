@@ -53,15 +53,15 @@ Desenvolva uma seção de conteúdo com artigos sobre:
 ## Requisitos Técnicos
 - Utilizar *Ruby on Rails* 8 para desenvolvimento completo da aplicação
 - *Frontend* integrado usando *Tailwind CSS* para estilização e componentes
-- Implementar componentes UI avançados com Flowbite para Tailwind CSS
+- Implementar componentes UI avançados com Tailwind CSS
 - Arquitetura MVC conforme padrão Rails para organização do código
 - Implementar design responsivo (mobile-first)
 - Utilizar Active Record para modelagem de dados e interação com banco de dados
-- SQLite3 para banco de dados principal
-- Solid Cache para cache
+- PostgreSQL para banco de dados principal
+- SQLite3 com Solid Cache para cache
 - Implementar Devise para sistema de autenticação de usuárias
 - Utilizar Hotwire (Turbo e Stimulus) para interatividade no frontend
-- Implementar Chart.js ou similar para gráficos de linha do histórico
+- Implementar 'chartkick' + 'highcharts' para gráficos de linha, e fráficos de tendência do histórico de peso e IMC
 - Configurar Action Mailer para envio de e-mails transacionais
 - Conformidade com LGPD para dados pessoais e de saúde
 - Implementação de cookies de sessão com avisos apropriados
