@@ -4,7 +4,7 @@
       <div class="absolute inset-y-0 left-0 flex items-center lg:hidden">
         <!-- Mobile menu button-->
         <button data-action="click->mobile-menu#toggle keydown.esc->mobile-menu#close resize@window->mobile-menu#close"
-                type="button" class="relative bg-pink-300 inline-flex items-center justify-center rounded-md p-3 text-gray-700 hover:bg-pink-600 
+                type="button" class="relative bg-pink-300 inline-flex items-center justify-center rounded-md p-1 text-gray-700 hover:bg-pink-600 
           hover:text-white focus:ring-2 focus:ring-pink-600 focus:outline-hidden focus:ring-inset" aria-controls="mobile-menu" aria-expanded="false">
           <span class="absolute -inset-0.5"></span>
           <span class="sr-only">Open main menu</span>
@@ -13,7 +13,7 @@
 
             Menu open: "hidden", Menu closed: "block"
           -->
-          <svg class="block size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+          <svg data-mobile-menu-target="btnOpen" class="block size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
           <!--
@@ -21,7 +21,7 @@
 
             Menu open: "block", Menu closed: "hidden"
           -->
-          <svg class="hidden size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+          <svg data-mobile-menu-target="btnClose" class="hidden size-8" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
         </button>
@@ -58,7 +58,7 @@
                       <%= link_to drop_link[:href], class: "group text-start block px-5 py-3 text-sm text-gray-700 dark:text-white hover:bg-pink-200 dark:hover:bg-gray-700/50 dark:hover:text-gray-100 transition-all duration-300" do %>
                         
                         <div class="flex items-center gap-2">
-                         <%= drop_link[:page] %> <span class="group-hover:text-green-500 group-hover:rotate-10"><%= nav_icon %></span>
+                         <%= drop_link[:page] %> <span class="group-hover:text-green-500 group-hover:rotate-45 transition-all duration-300"><%= nav_icon %></span>
                         </div>
                       <% end %>
                     <% end %>
@@ -133,22 +133,42 @@
               </div>
             </div>
 
-            <div id="user-menu-item-1" class="w-full px-4 py-2 inline-flex items-center gap-2 text-sm text-gray-700 hover:bg-pink-200
+            <div id="user-menu-item-1" class="group w-full px-4 py-2 inline-flex items-center gap-2 text-sm text-gray-700 hover:bg-pink-200
                  truncate dark:text-gray-800 transition-all duration-300" role="menuitem" tabindex="-1">
-              <svg class="w-4 h-4" 
-                   aria-hidden="true" 
-                   width="24" 
-                   height="24" 
-                   fill="none" 
+              <svg class="size-4 group-hover:text-sky-600 transition-none duration-300"
+                   aria-hidden="true"
+                   width="24"
+                   height="24"
+                   fill="none"
                    viewBox="0 0 24 24">
-                <path stroke="currentColor" 
+                <path stroke="currentColor"
                   stroke-linecap="round" 
-                  stroke-linejoin="round" 
+                  stroke-linejoin="round"
                   stroke-width="2" 
                   d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
               </svg>
 
               <span><%= link_to "Seu perfil", profile_path %></span>                  
+            </div>
+
+            <div id="user-menu-item-1" class="group w-full px-4 py-2 inline-flex items-center gap-2 text-sm text-gray-700 hover:bg-pink-200
+                 truncate dark:text-gray-800 transition-all duration-300" role="menuitem" tabindex="-1">
+              <svg width="24"
+                   height="24"
+                   viewBox="0 0 24 24" 
+                   fill="none" 
+                   stroke="currentColor" 
+                   stroke-width="2" 
+                   stroke-linecap="round" 
+                   stroke-linejoin="round" 
+                   class="lucide lucide-layout-dashboard size-4 group-hover:text-sky-600 transition-none duration-300">
+                   <rect width="7" height="9" x="3" y="3" rx="1"/>
+                   <rect width="7" height="5" x="14" y="3" rx="1"/>
+                   <rect width="7" height="9" x="14" y="12" rx="1"/>
+                   <rect width="7" height="5" x="3" y="16" rx="1"/>
+              </svg>
+
+              <span><%= link_to "Seu Dashboard", dashboard_path %></span>                  
             </div>
 
             <div id="user-menu-item-2" class="w-full px-4 py-2 mb-0 inline-flex items-center gap-2 text-sm text-gray-700 hover:bg-pink-200
@@ -222,21 +242,27 @@
                    <path d="M8 18h.01"/>
               </svg>
               <%= link[:page] %>
-              <svg class="-mr-1 size-5 text-gray-800 group-hover:text-gray-100 dark:text-gray-100" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
-                <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+              <svg class="-mr-1 size-5 text-gray-800 group-hover:text-gray-100 dark:text-gray-100" 
+                   viewBox="0 0 20 20" 
+                   fill="currentColor" 
+                   aria-hidden="true" 
+                   data-slot="icon">
+                  <path fill-rule="evenodd" 
+                  d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" 
+                  clip-rule="evenodd" />
               </svg>
             </button>
 
             <div data-mobile-dropdown-target="Mbmenu"
-                 class="hidden absolute overflow-hidden z-10 mt-2 w-56 rounded-md bg-pink-50 dark:bg-gray-800
-                  dark:border dark:border-gray-700 shadow-lg ring-1 ring-black ring-opacity-10">
+                 class="inline-block absolute mt-2 w-full rounded-md overflow-hidden border border-1-rose-500 shadow-md bg-pink-200 dark:bg-gray-800
+                  dark:border dark:border-gray-700">
               <% link[:dropdown].each do |drop_link| %>
                 <%= link_to drop_link[:href], 
-                    class: "group text-start block px-5 py-3 text-sm text-gray-700 dark:text-white hover:bg-pink-200 
-                    dark:hover:bg-gray-700/50 dark:hover:text-gray-100 transition-all duration-300" do %>
+                    class: "group text-start w-full block px-5 py-3 text-sm text-gray-700 dark:text-white hover:bg-pink-500 
+                    hover:text-white dark:hover:bg-gray-700/50 dark:hover:text-gray-100 transition-all duration-400" do %>
                   
                   <div class="flex items-center gap-2">
-                    <%= drop_link[:page] %> <span class="group-hover:text-green-500 group-hover:rotate-10"><%= nav_icon %></span>
+                    <%= drop_link[:page] %> <span class="group-hover:text-white dark:group-hover:text-yellow-500 group-hover:rotate-45 transition-all duration-300"><%= nav_icon %></span>
                   </div>
                 <% end %>
               <% end %>

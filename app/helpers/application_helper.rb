@@ -25,7 +25,7 @@ module ApplicationHelper
   end
 
   def nav_icon
-    tag.svg(class: "h-4 w-4 group-hover:rotate-45 transition-all duration-300", fill: "none", viewBox: "0 0 24 24", stroke_width: "1.5", stroke: "currentColor") do
+    tag.svg(class: "h-4 w-4 ", fill: "none", viewBox: "0 0 24 24", stroke_width: "1.5", stroke: "currentColor") do
       tag.path(
         stroke_linecap: "round",
         stroke_linejoin: "round",

@@ -9,7 +9,7 @@
     <section class="mb-10">
       <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Próximos Eventos</h2>
       
-      <div class="flex flex-col md:flex-row gap-4">
+      <div class="flex flex-col lg:flex-row gap-4">
         <% if @upcoming_events.present? %>
           <% @upcoming_events.each_with_index do |event, index| %>
             <!-- Adicionar log para depuração -->
