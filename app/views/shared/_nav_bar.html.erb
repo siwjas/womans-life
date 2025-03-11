@@ -194,22 +194,24 @@
       <!-- Current: "text-white bg-pink-700", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
       <% nav_items.each do |link| %> 
         <% if link[:dropdown] %>
-          <!-- Dropdown menu for Calculators -->
-          <div data-controller="dropdown" class="relative">
-            <button data-action="click->dropdown#toggle" type="button" 
+
+          <!-- Mobile Dropdown menu for Calculators -->
+          <div data-controller="mobile-dropdown" class="relative">
+            <button data-action="click->mobile-dropdown#toggle keydown.esc->mobile-dropdown#close resize@window->mobile-dropdown#close" type="button" 
                     class="group flex w-full items-center gap-2 rounded-md px-3 py-2 font-medium text-lg drop-shadow-md text-gray-900 
                     dark:text-white hover:bg-pink-400 dark:hover:bg-gray-700/50 hover:text-white transition-all duration-300" 
                     id="menu-button" 
                     aria-expanded="true" 
                     aria-haspopup="true">
 
-              <svg width="20" height="20" 
-                   viewBox="0 0 24 24" 
-                   fill="none" 
-                   stroke="currentColor" 
+              <!-- Ícone Calculadora -->
+              <svg width="20" height="20"
+                   viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
                    stroke-width="2" 
-                   stroke-linecap="round" 
-                   stroke-linejoin="round" 
+                   stroke-linecap="round"
+                   stroke-linejoin="round"
                    class="lucide lucide-calculator text-pink-600">
                    <rect width="16" height="20" x="4" y="2" rx="2"/>
                    <line x1="8" x2="16" y1="6" y2="6"/>
@@ -225,8 +227,7 @@
               </svg>
             </button>
 
-            <div data-dropdown-target="menu"
-                 data-action="click@window->dropdown#close keydown.esc->dropdown#close resize@window->dropdown#close"
+            <div data-mobile-dropdown-target="Mbmenu"
                  class="hidden absolute overflow-hidden z-10 mt-2 w-56 rounded-md bg-pink-50 dark:bg-gray-800
                   dark:border dark:border-gray-700 shadow-lg ring-1 ring-black ring-opacity-10">
               <% link[:dropdown].each do |drop_link| %>
