@@ -69,4 +69,7 @@ gem "groupdate"
 
 gem "devise", "~> 4.9"
 
+# CMS para gerenciamento de artigos
+gem "spina", "~> 2.17"
+
 gem "dockerfile-rails", ">= 1.7", group: :development

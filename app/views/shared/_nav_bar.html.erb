@@ -153,7 +153,7 @@
 
             <div id="user-menu-item-1" class="group w-full px-4 py-2 inline-flex items-center gap-2 text-sm text-gray-700 hover:bg-pink-200
                  truncate dark:text-gray-800 transition-all duration-300" role="menuitem" tabindex="-1">
-              <svg width="24"
+              <%# <svg width="24"
                    height="24"
                    viewBox="0 0 24 24" 
                    fill="none" 
@@ -166,6 +166,20 @@
                    <rect width="7" height="5" x="14" y="3" rx="1"/>
                    <rect width="7" height="9" x="14" y="12" rx="1"/>
                    <rect width="7" height="5" x="3" y="16" rx="1"/>
+              </svg> %>
+
+              <svg width="24"
+                   height="24"
+                   viewBox="0 
+                   0 24 24" 
+                   fill="none" 
+                   stroke="currentColor" 
+                   stroke-width="2" 
+                   stroke-linecap="round" 
+                   stroke-linejoin="round" 
+                   class="lucide lucide-chart-line size-4 group-hover:text-sky-600 transition-none duration-300">
+                   <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+                   <path d="m19 9-5 5-4-4-3 3"/>
               </svg>
 
               <span><%= link_to "Seu Dashboard", dashboard_path %></span>                  
