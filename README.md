@@ -1,24 +1,29 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Projeto focado em ajudar mulheres que estão grávidas, planejando engravidar, tentando evidar a graviês ou acompanhar
+seus Índices de Massa Corporar (IMC) estando grávida ou não para manter o peso sob controle.
 
-Things you may want to cover:
+## Screenshots do Projeto
 
-* Ruby version
+### Tela Inicial
+![Tela inicial](docs/images/tela_inicial.png)
 
-* System dependencies
+### Dashboard de Usuário
+![Dashboard - 1](docs/images/dashboard_1.png)
 
-* Configuration
+![Dashboard - 2](docs/images/dashboard_2.png)
 
-* Database creation
+![Dashboard - 3](docs/images/dashboard_3.png)
 
-* Database initialization
 
-* How to run the test suite
+### Navbar
+![Navbar](docs/images/nav_bar_jumbotron.png)
 
-* Services (job queues, cache servers, search engines, etc.)
+### Footer
+![Footer](docs/images/footer.png)
 
-* Deployment instructions
+### Calculadoras
+![Calculadora IMC](docs/images/imc_calculator.png)
 
-* ...
+![Calculadora Ciclo Menstrual](docs/images/menstrual_cycle_calculator.png)
+

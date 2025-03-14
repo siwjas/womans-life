@@ -171,15 +171,15 @@ class BmiCalculator < ApplicationRecord
   
   def bmi_category
     case bmi
-    when 0..18.4
+    when 0..18.40
       'Underweight'
-    when 18.5..24.9
+    when 18.5..24.90
       'Normal weight'
-    when 25.0..29.9
+    when 25.0..29.90
       'Overweight'
-    when 30.0..34.9
+    when 30.0..34.90
       'Obesity Class I'
-    when 35.0..39.9
+    when 35.0..39.90
       'Obesity Class II'
     else
       'Obesity Class III'
@@ -223,6 +223,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.string :first_name, null: false
       t.string :last_name, null: false
       t.date :date_of_birth
+      t.decimal :height, null: false, precision: 5, scale: 2
       t.string :phone_number
       t.boolean :agreed_to_terms, default: false
       
@@ -284,7 +285,6 @@ class CreateMenstrualCycleCalculators < ActiveRecord::Migration[8.0]
       t.date :ovulation_date
       t.date :next_period_date
       t.text :notes
-      t.jsonb :symptoms, default: {}
       
       t.timestamps
     end
@@ -306,7 +306,6 @@ class CreateBmiCalculators < ActiveRecord::Migration[8.0]
       t.boolean :is_pregnant, default: false
       t.decimal :pre_pregnancy_weight, precision: 5, scale: 2
       t.decimal :weight_goal, precision: 5, scale: 2
-      t.text :notes
       
       t.timestamps
     end
