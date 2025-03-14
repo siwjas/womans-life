@@ -32,7 +32,7 @@ gem "solid_cable"
 gem "bootsnap", require: false
 
 # TailwindCSS for Rails
-gem "tailwindcss-rails", "~> 3.3", ">= 3.3.1"
+gem "tailwindcss-rails", "~> 4.2"
 
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
 gem "kamal", require: false
